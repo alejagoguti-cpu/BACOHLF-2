@@ -77,6 +77,60 @@ function animarSeccion(sec: HTMLElement) {
   });
   $$('[data-a="pop"]', sec).forEach((el, i) => tl.fromTo(el, { autoAlpha: 0, scale: 0.6, y: 20, filter: 'blur(10px)' },
     { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'back.out(1.8)' }, 0.55 + i * 0.12));
+  // ── diagramas corporativos ──
+  // flujo: la línea se traza y cada nodo se enciende al pasar
+  $$<HTMLElement>('[data-a="flujo"]', sec).forEach((f) => {
+    const li = $$('li', f); li.forEach((l) => l.classList.remove('on'));
+    gsap.set(f, { autoAlpha: 1, '--p': 0 });
+    tl.to(f, { '--p': 1, duration: 0.5 * li.length, ease: 'none' }, 0.6);
+    li.forEach((l, i) => {
+      tl.fromTo(l, { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.6 + i * 0.5);
+      tl.fromTo(l, { '--s': 0 }, { '--s': 1, duration: 0.5, ease: 'back.out(3)' }, 0.6 + i * 0.5);
+      tl.call(() => l.classList.add('on'), [], 0.8 + i * 0.5);
+    });
+  });
+  // diagrama antes/después: las conexiones se dibujan; el lado federado converge al centro
+  $$('[data-a="diag"]', sec).forEach((d) => {
+    gsap.set(d, { autoAlpha: 1 });
+    const nds = $$('.nd', d); const lnA = $$('.ln.r', d); const lnB = $$('.ln.o', d);
+    tl.fromTo($$('text.dt, .sep', d), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, stagger: 0.15 }, 0.3);
+    tl.fromTo(nds, { autoAlpha: 0, scale: 0.4, transformOrigin: '50% 50%' }, { autoAlpha: 1, scale: 1, duration: 0.5, stagger: 0.05, ease: 'back.out(2)' }, 0.5);
+    [...lnA, ...lnB].forEach((p) => { const L = (p as unknown as SVGPathElement).getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+    tl.to(lnA, { strokeDashoffset: 0, duration: 0.9, stagger: 0.06, ease: 'power2.inOut' }, 1.0);
+    tl.to(lnB, { strokeDashoffset: 0, duration: 0.8, stagger: 0.08, ease: 'power2.out' }, 1.9);
+    tl.fromTo($$('figcaption span', d), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.2 }, 2.5);
+    tl.call(() => pulsosDiag(d), [], 2.8);
+  });
+  // cronograma: las barras crecen desde su mes de inicio
+  $$('[data-a="gantt"]', sec).forEach((g) => {
+    gsap.set(g, { autoAlpha: 1 });
+    tl.fromTo($$('.g-meses span', g), { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06 }, 0.3);
+    $$('.g-fila', g).forEach((f, i) => {
+      tl.fromTo(f, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 0.6 + i * 0.25);
+      tl.fromTo($('.g-et', f), { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 0.6 }, 0.6 + i * 0.25);
+      tl.fromTo($('.g-bar', f), { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'power3.inOut' }, 0.8 + i * 0.25);
+      tl.fromTo($('.g-bar span', f), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 }, 1.6 + i * 0.25);
+    });
+  });
+  // red de actores: BACO aparece al centro y las conexiones salen hacia cada actor
+  $$('[data-a="hub"]', sec).forEach((h) => {
+    gsap.set(h, { autoAlpha: 1 });
+    const movil = innerWidth < 900;
+    const centro = $('.n0', h); const otros = $$('.actor:not(.n0)', h);
+    const pos = movil ? { xPercent: 0, yPercent: 0, x: 0, y: 0 } : { xPercent: -50, yPercent: -50, x: 0, y: 0 };
+    tl.fromTo(centro, { ...pos, autoAlpha: 0, scale: 0.6 }, { ...pos, autoAlpha: 1, scale: 1, duration: 0.7, ease: 'back.out(2)' }, 0.4);
+    $$('.hub-l path', h).forEach((p) => { const L = (p as unknown as SVGPathElement).getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
+    tl.to($$('.hub-l path', h), { strokeDashoffset: 0, duration: 0.8, stagger: 0.12, ease: 'power2.out' }, 0.9);
+    tl.fromTo(otros, { ...pos, autoAlpha: 0, scale: 0.85 }, { ...pos, autoAlpha: 1, scale: 1, duration: 0.6, stagger: 0.12, ease: 'power3.out' }, 1.3);
+  });
+  // árbol del activo: tronco, ramas y cada dato
+  $$<HTMLElement>('[data-a="arbol"]', sec).forEach((a) => {
+    gsap.set(a, { autoAlpha: 1, '--p': 0, '--q': 0 });
+    tl.fromTo($('.raiz', a), { autoAlpha: 0, x: -30 }, { autoAlpha: 1, x: 0, duration: 0.7 }, 0.4);
+    tl.to($('ul', a), { '--q': 1, duration: 0.4, ease: 'power2.out' }, 0.9);
+    tl.to($('ul', a), { '--p': 1, duration: 0.7, ease: 'power2.inOut' }, 1.2);
+    tl.fromTo($$('li', a), { autoAlpha: 0, x: -14 }, { autoAlpha: 1, x: 0, duration: 0.45, stagger: 0.12 }, 1.5);
+  });
   // contenido interno de las etapas, después del giro de cada tarjeta
   $$('.etapa', sec).forEach((card, i) => tl.fromTo([...card.children], { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08 }, 0.9 + i * 0.22));
   // nubes de chips / actores: salen del centro y quedan flotando
@@ -108,7 +162,49 @@ function animarSeccion(sec: HTMLElement) {
   return tl;
 }
 
+// ── diagrama "sin coordinación / modelo federado" ──
+const ESP = ['Arq.', 'Estr.', 'Hidro', 'RCI', 'Eléc.', 'Mec.'];
+function construirDiag() {
+  const ns = 'http://www.w3.org/2000/svg';
+  $$('[data-a="diag"]').forEach((d) => {
+    const nd = (x: number, y: number, t: string, c = false, w = 70) =>
+      `<g class="nd${c ? ' c' : ''}" transform="translate(${x},${y})"><rect x="${-w / 2}" y="-15" width="${w}" height="30" rx="2"/><text>${t}</text></g>`;
+    // izquierda: nodos dispersos conectados todos contra todos (desorden)
+    const A = [[70, 70], [330, 60], [200, 120], [60, 200], [340, 205], [210, 225]];
+    let la = '';
+    A.forEach((p, i) => A.forEach((q, j) => { if (j > i && (i + j) % 2) la += `<path class="ln r" d="M${p[0]} ${p[1]} L${q[0]} ${q[1]}"/>`; }));
+    // derecha: cada especialidad conectada solo al modelo federado
+    const C = [700, 140]; const B = ESP.map((_, i) => { const a = -Math.PI / 2 + (i * Math.PI * 2) / 6; return [C[0] + Math.cos(a) * 190, C[1] + Math.sin(a) * 92]; });
+    const lb = B.map((p) => `<path class="ln o" d="M${p[0]} ${p[1]} L${C[0]} ${C[1]}"/>`).join('');
+    const gA = d.querySelector('.nodos-a')!; const gB = d.querySelector('.nodos-b')!;
+    gA.innerHTML = la + A.map((p, i) => nd(p[0], p[1], ESP[i])).join('');
+    gB.innerHTML = lb + B.map((p, i) => nd(p[0], p[1], ESP[i])).join('') + nd(C[0], C[1], 'BIM', true, 84);
+    void ns;
+    // celular: los dos esquemas uno debajo del otro para que se lean
+    if (innerWidth < 900) {
+      const svg = d.querySelector('svg')!; svg.setAttribute('viewBox', '-15 0 480 520');
+      const [t1, t2] = [...svg.querySelectorAll('text.dt')]; t2.setAttribute('x', '250'); t2.setAttribute('y', '288'); void t1;
+      gB.setAttribute('transform', 'translate(-450 270)');
+      svg.querySelector('.sep')!.setAttribute('d', 'M40 262 H410');
+    }
+  });
+}
+/** Pulsos de información que viajan de cada especialidad al modelo federado, en bucle. */
+function pulsosDiag(d: HTMLElement) {
+  if (reducido || d.dataset.pulsos) return;
+  d.dataset.pulsos = '1';
+  const svg = d.querySelector('svg')!;
+  $$('.ln.o', d).forEach((p, i) => {
+    const path = p as unknown as SVGPathElement; const L = path.getTotalLength();
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('r', '3'); c.setAttribute('class', 'pulso-dot'); c.setAttribute('opacity', '0'); svg.appendChild(c);
+    const o = { t: 0 };
+    gsap.to(o, { t: 1, duration: 1.6, repeat: -1, delay: i * 0.27, ease: 'power1.in', repeatDelay: 0.6,
+      onUpdate: () => { const pt = path.getPointAtLength(o.t * L); c.setAttribute('cx', String(pt.x)); c.setAttribute('cy', String(pt.y)); c.setAttribute('opacity', String(o.t < 0.9 ? 1 : (1 - o.t) * 10)); } });
+  });
+}
+
 export function iniciarAnimaciones() {
+  construirDiag();
   $$('[data-escena]').forEach((sec) => {
     const animados = $$('[data-a]', sec).filter((e) => !['words', 'chips', 'pills'].includes(e.dataset.a!));
     gsap.set(animados, { autoAlpha: 0 });
@@ -136,13 +232,13 @@ export function iniciarAnimaciones() {
 /** Cada tarjeta responde al mouse: se inclina en 3D y refleja la luz. */
 function iniciarTilt() {
   if (reducido || matchMedia('(hover: none)').matches) return;
-  const sel = '.stat, .etapa, .tcapa, .leyendo, .alerta, .msg, .total, .grafico, .frente, .linea, .renders figure, .actor, .resp, .info-lamina, .hab-frame';
+  const sel = '.tcapa, .grafico, .actor, .g-bar, .flujo li, .arbol .raiz, .frente .habs span, .alerta';
   document.addEventListener('pointermove', (e) => {
     const el = (e.target as HTMLElement).closest<HTMLElement>(sel);
     $$(sel).forEach((c) => { if (c !== el && c.dataset.inclinada) { delete c.dataset.inclinada; gsap.to(c, { rotateX: 0, rotateY: 0, '--gx': '50%', '--gy': '-20%', duration: 0.7, ease: 'power3.out' }); } });
     if (!el) return;
     const r = el.getBoundingClientRect(); const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
-    const fuerza = el.classList.contains('hab-frame') || el.classList.contains('grafico') ? 4 : 9;
+    const fuerza = el.classList.contains('grafico') ? 3 : 7;
     el.dataset.inclinada = '1';
     gsap.to(el, { rotateY: px * fuerza, rotateX: -py * fuerza, transformPerspective: 900, '--gx': `${(px + 0.5) * 100}%`, '--gy': `${(py + 0.5) * 100}%`, duration: 0.5, ease: 'power2.out' });
   });
@@ -214,7 +310,7 @@ const HITOS = [
   ['02 nov', 'Entrega formal conjunta', 'Recepción consolidada del piso completo.'],
 ];
 export function iniciarObra() {
-  $('#frentes').innerHTML = FRENTES.map((f) => `<div class="glass frente"><b>${f.f}</b><div class="habs">${f.s.map((h) => `<span>${h}</span>`).join('<em>' + ico('flecha') + '</em>')}</div></div>`).join('');
+  $('#frentes').innerHTML = FRENTES.map((f) => `<div class="frente"><b>${f.f}</b><div class="habs">${f.s.map((h) => `<span>${h}</span>`).join('<em>' + ico('flecha') + '</em>')}</div></div>`).join('');
   $('#hitos').innerHTML = '<i class="traz"></i>' + HITOS.map(([d, h, r]) => `<div class="hito"><time>${d} · 2026</time><b>${h}</b><p>${r}</p></div>`).join('');
   const play = () => {
     const tl = gsap.timeline({ delay: 0.5 });
@@ -222,6 +318,16 @@ export function iniciarObra() {
     tl.fromTo('.frente .habs span', { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, stagger: 0.04, duration: 0.4, ease: 'back.out(2)' }, 0.4);
     tl.fromTo('.eje .traz', { height: 0 }, { height: 'calc(100% - 12px)', duration: 2.6, ease: 'power1.inOut' }, 0.6);
     tl.fromTo('.hito', { autoAlpha: 0, x: 40, filter: 'blur(6px)' }, { autoAlpha: 1, x: 0, filter: 'blur(0px)', stagger: 0.4, duration: 0.6 }, 0.7);
+    tl.call(recorrido, [], 1.6);
+  };
+  // las cuadrillas recorren cada frente habitación por habitación, en bucle
+  let paso = 0; let reloj = 0;
+  const recorrido = () => {
+    if (reloj || reducido) return;
+    reloj = window.setInterval(() => {
+      paso = (paso + 1) % 4;
+      document.querySelectorAll('.frente').forEach((f) => f.querySelectorAll('.habs span').forEach((h, i) => h.classList.toggle('act', i === paso)));
+    }, 1100);
   };
   gsap.set('.hito, .frente', { autoAlpha: 0 });
   ScrollTrigger.create({ trigger: '[data-escena="obra"]', start: 'top 65%', onEnter: play, onEnterBack: play });
@@ -230,11 +336,23 @@ export function iniciarObra() {
 // ───────────────────────── actores ─────────────────────────
 export function iniciarActores() {
   const resp = $('#resp');
-  $$('.actor').forEach((a) => a.addEventListener('click', () => {
-    $$('.actor').forEach((x) => x.classList.toggle('on', x === a));
+  const lineas = $$('.hub-l path');
+  const actores = $$('.actor');
+  const elegir = (a: HTMLElement) => {
+    actores.forEach((x) => x.classList.toggle('on', x === a));
+    // la conexión de ese actor con BACO se enciende y un pulso viaja por ella
+    const k = ['n1', 'n2', 'n3', 'n4'].findIndex((c) => a.classList.contains(c));
+    lineas.forEach((p, i) => p.classList.toggle('on', i === k || k < 0));
+    if (k >= 0) gsap.fromTo(lineas[k], { strokeDashoffset: (lineas[k] as unknown as SVGPathElement).getTotalLength() }, { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out' });
+    gsap.fromTo(a, { scale: 0.94 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
     gsap.to(resp, { autoAlpha: 0, y: 10, duration: 0.2, onComplete: () => {
-      $('small', resp).textContent = a.textContent!; $('p', resp).textContent = a.dataset.r!;
+      $('small', resp).textContent = a.textContent!.trim(); $('p', resp).textContent = a.dataset.r!;
+      gsap.fromTo($('p', resp), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power2.out' });
       gsap.to(resp, { autoAlpha: 1, y: 0, duration: 0.4 });
     } });
-  }));
+  };
+  actores.forEach((a) => {
+    a.addEventListener('click', () => elegir(a));
+    a.addEventListener('pointerenter', () => { if (matchMedia('(hover: hover)').matches) elegir(a); });
+  });
 }

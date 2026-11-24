@@ -11,6 +11,7 @@ import { iniciarHero } from './hero';
 import { iniciarCursor } from './cursor';
 import { ico, pintarIconos } from './iconos';
 import './interaccion.css';
+import './premium.css';
 gsap.registerPlugin(ScrollTrigger);
 // en un PC liviano las animaciones terminan a tiempo en vez de ralentizarse
 gsap.ticker.lagSmoothing(0);
@@ -547,7 +548,7 @@ let pendiente: number | undefined;
 addEventListener('pointermove', function mover(ev: PointerEvent) {
   const ahora = performance.now(); if (ahora - ultimoRay < 120) { tip.style.transform = `translate(${ev.clientX + 16}px, ${ev.clientY + 16}px)`; clearTimeout(pendiente); pendiente = window.setTimeout(() => mover(ev), 130); return; }
   ultimoRay = ahora;
-  const encima = (ev.target as Element).closest?.('.txt, .glass, button, a, .chip, .carrusel, .actores, .nube-chips, #dock, #top, .etapas, #lightbox, .flotantes .fcard');
+  const encima = (ev.target as Element).closest?.('.txt, .glass, button, a, .chip, .carrusel, .actores, .nube-chips, #dock, #top, .etapas, #lightbox, .flotantes .fcard, .hub, .diag, .gantt, .flujo, .arbol, .alerta, .total, .grafico, .resp, .linea, .frente');
   if (matchMedia('(hover: none)').matches || (modo === 'cine' && encima) || !niveles.length) { HOV.meta = 0; tip.classList.remove('on'); return; }
   ptr.set(ev.clientX / innerWidth * 2 - 1, -(ev.clientY / innerHeight) * 2 + 1);
   ray.setFromCamera(ptr, camera);
@@ -619,7 +620,7 @@ function frame() {
   const man = await cargar();
   definirEscenas();
   const etq = document.createElement('div'); etq.className = 'etq'; etq.id = 'etqCritico'; etq.innerHTML = 'Interferencia · RCI ' + ico('cruce') + ' conduit'; $('#etiquetas').appendChild(etq);
-  if (critico.ok) { const txt = (critico.d * 100).toFixed(1).replace('.', ',') + ' cm'; $('#dCritico').textContent = txt; $('#dCritico2').textContent = txt; }
+  if (critico.ok) { const txt = (critico.d * 100).toFixed(1).replace('.', ',') + ' cm'; $('#dCritico').textContent = txt; const d2 = document.getElementById('dCritico2'); if (d2) d2.textContent = txt; }
   iniciarHero();
   ui();
   construirCapas();
