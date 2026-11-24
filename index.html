@@ -67,14 +67,16 @@
       <h2 class="tachado"><span data-a="words">Una remodelación se</span> <span class="strike" data-a="strike">improvisa</span> <span class="nueva" data-a="deblur">coordina</span></h2>
       <p class="lead" data-a="up">Ordenar las obligaciones de cada especialista, reducir interferencias de diseño y mantener la trazabilidad de los cambios hasta la entrega del activo digital.</p>
     </div>
-    <div class="red-wrap" data-a="red" data-red="reto">
-      <div class="red-ui">
-        <div class="seg red-modo"><button data-m="malla" class="on">Sin coordinación</button><button data-m="estrella">Modelo federado BIM</button></div>
-        <div class="red-dato"><b data-red-n>15</b><span><small data-red-arq>Malla · todos contra todos</small><em>interfaces a coordinar</em></span></div>
-      </div>
-      <svg class="red" aria-label="Red de especialidades"></svg>
-      <p class="red-ayuda">Toca una especialidad para retirarla o volver a sumarla. Arrastra los nodos para reacomodar la red.</p>
-    </div>
+    <figure class="diag dos" data-a="diag">
+      <svg viewBox="0 0 900 250" aria-label="Sin coordinación frente a modelo federado">
+        <text x="200" y="18" class="dt">Sin coordinación</text>
+        <g class="nodos-a"></g>
+        <path class="sep" d="M450 40 V230" />
+        <text x="700" y="18" class="dt oro">Modelo federado</text>
+        <g class="nodos-b"></g>
+      </svg>
+      <figcaption><span><i class="r"></i>Interferencias, RFI y cambios de campo sin trazabilidad</span><span><i class="o"></i>Una sola fuente de información, decisiones registradas</span></figcaption>
+    </figure>
   </section>
 
   <!-- 02 ESCANEO -->
@@ -175,14 +177,17 @@
     <div class="txt">
       <p class="k" data-a="up">08 · Matriz de responsabilidades</p>
       <h2 data-a="words">Cada quien <b>su modelo.</b> BACO, la gestión.</h2>
-      <p class="lead" data-a="up">Pasa por un actor para ver su responsabilidad contractual; tócalo para sacarlo de la red.</p>
+      <p class="lead" data-a="up">Toca un actor para ver su responsabilidad contractual.</p>
     </div>
-    <div class="red-wrap" data-a="red" data-red="actores">
-      <div class="red-ui">
-        <div class="red-dato"><b data-red-n>4</b><span><small data-red-arq>Estrella · BACO al centro</small><em>interfaces a gestionar</em></span></div>
-      </div>
-      <svg class="red alta" aria-label="Red de actores del proyecto"></svg>
-      <p class="red-ayuda">Apaga BACO STUDIO y mira cómo cada actor queda obligado a coordinarse con todos los demás.</p>
+    <div class="hub" data-a="hub">
+      <svg class="hub-l" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M500 150 L170 60" /><path d="M500 150 L830 60" /><path d="M500 150 L170 240" /><path d="M500 150 L830 240" />
+      </svg>
+      <button class="actor n1" data-r="Levantamiento 3D y entrega del modelo de condiciones existentes LOD 300 y soportes acordados."><i data-i="escaner"></i><span>Proveedor de escaneo</span></button>
+      <button class="actor n2" data-r="Desarrollar, revisar y aprobar técnicamente sus modelos por especialidad, en LOD 400 según matriz pactada."><i data-i="diseno"></i><span>Diseñadores / especialistas</span></button>
+      <button class="actor oro n0 on" data-r="Establecer requisitos, administrar BEP/CDE, coordinar, verificar entregas e integrar el cierre digital."><i data-i="red"></i><span>BACO STUDIO</span></button>
+      <button class="actor n3" data-r="Mantener modelos de fabricación/instalación, documentar cambios y suministrar as-built y datos de equipos."><i data-i="casco"></i><span>Contratistas / fabricantes</span></button>
+      <button class="actor n4" data-r="Contratar a responsables, tomar decisiones de aprobación, exigir cumplimiento y recibir los entregables."><i data-i="propietario"></i><span>Propietario / gerencia</span></button>
     </div>
     <p class="normas" data-a="stagger"><span>ISO 19650-1 · 19650-2</span><span>BIMForum LOD 2025</span><span>IFC</span><span>BEP</span><span>EIR / AIR</span><span>CDE</span></p>
     <div class="resp" id="resp" data-a="fly"><small>BACO STUDIO</small><p>Establecer requisitos, administrar BEP/CDE, coordinar, verificar entregas e integrar el cierre digital.</p></div>
