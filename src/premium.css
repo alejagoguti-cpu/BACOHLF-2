@@ -679,3 +679,19 @@ body.dock-on #dock, body[data-modo="libre"] #dock { opacity: 1; visibility: visi
   .diag figcaption span { flex-wrap: wrap; }
   .diag figcaption .cnt { flex-basis: 100%; margin-left: 28px; }
 }
+
+/* 09.1: barras con tooltip (roi.ts iniciarTips) */
+#cascada .b-a { fill: rgba(220,229,236,.16); stroke: rgba(220,229,236,.55); }
+#cascada .zona { fill: transparent; cursor: help; }
+#cascada rect { transition: opacity .3s; }
+#cascada[data-foco] rect.b-a, #cascada[data-foco] rect.b-i, #cascada[data-foco] rect.b-n { opacity: .35; }
+#cascada[data-foco="0"] rect[data-t="0"], #cascada[data-foco="1"] rect[data-t="1"], #cascada[data-foco="2"] rect[data-t="2"] { opacity: 1; }
+.cas-wrap { position: relative; }
+#casTip { position: absolute; left: 0; top: 0; z-index: 5; width: 250px; transform: translate(-50%, calc(-100% - 14px)); pointer-events: none; opacity: 0; visibility: hidden;
+  background: #001b3b; border: 1px solid var(--hilo2); border-top: 2px solid var(--oro); padding: 11px 13px; font-size: 12.5px; line-height: 1.5; color: var(--txt2); box-shadow: 0 16px 40px -14px rgba(0,0,0,.8); }
+#casTip b { display: block; margin-bottom: 4px; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #fff; }
+#casTip b.t1 { color: #ff8a77; } #casTip b.t2 { color: var(--oro); }
+#casTip[data-i="0"] { border-top-color: rgba(220,229,236,.6); } #casTip[data-i="1"] { border-top-color: #ff8a77; }
+.res-kpis em { font-style: normal; line-height: 1.4; }
+.roi-sec .lead b { color: #fff; font-weight: 600; }
+@media (min-width: 901px) { .res-kpis small { min-height: 2.7em; } }

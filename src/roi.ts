@@ -60,6 +60,28 @@ function contar(el: Element | null, clave: string, valor: number, fmt: (v: numbe
 function destello(el: Element | null) { if (el) gsap.fromTo(el, { color: '#ffffff' }, { color: '', duration: 0.9, ease: 'power2.out', clearProps: 'color' }); }
 
 // ── 09.1 cascada ──
+let tips: string[] = [];
+const semana = (t: number) => Math.max(1, Math.ceil(Math.max(1, Math.round((t - 1) * 30)) / 7));
+/** Tooltips de las barras: explican qué es cada cifra al pasar el cursor (o al tocar en celular). */
+function iniciarTips() {
+  const svg = $<SVGSVGElement>('#cascada'); const tip = $('#casTip'); const wrap = svg?.parentElement; if (!svg || !tip || !wrap) return;
+  const TIT = ['Lo que dejas de botar', 'Lo que cuesta BIM', 'Lo que te queda en el bolsillo'];
+  let act = -1;
+  const mostrar = (i: number, ev: PointerEvent) => {
+    const w = wrap.getBoundingClientRect();
+    if (i !== act) {
+      act = i; tip.innerHTML = `<b class="t${i}">${TIT[i]}</b>${tips[i] ?? ''}`; tip.dataset.i = String(i); svg.dataset.foco = String(i);
+      gsap.fromTo(tip, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out', overwrite: true });
+    }
+    gsap.set(tip, { left: Math.min(Math.max(ev.clientX - w.left, 130), w.width - 130), top: ev.clientY - w.top });
+  };
+  const ocultar = () => { if (act < 0) return; act = -1; delete svg.dataset.foco; gsap.to(tip, { autoAlpha: 0, duration: 0.2, overwrite: true }); };
+  const zona = (ev: PointerEvent) => (ev.target as Element).closest?.('[data-t]');
+  svg.addEventListener('pointermove', (ev) => { const z = zona(ev); if (z) mostrar(+z.getAttribute('data-t')!, ev); else ocultar(); });
+  svg.addEventListener('pointerdown', (ev) => { const z = zona(ev); if (z) mostrar(+z.getAttribute('data-t')!, ev); });
+  svg.addEventListener('pointerleave', ocultar);
+}
+
 const cas = { A: 0, I: 0 };
 function dibujarCascada() {
   const svg = $<SVGSVGElement>('#cascada'); if (!svg) return;
@@ -72,17 +94,18 @@ function dibujarCascada() {
   svg.innerHTML = `
     <defs><linearGradient id="gA" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#D5BE91" stop-opacity=".55"/><stop offset="1" stop-color="#D5BE91" stop-opacity=".08"/></linearGradient></defs>
     <line x1="30" x2="${W - 10}" y1="${base}" y2="${base}" class="eje"/>
-    <rect x="${xs[0]}" y="${y(A)}" width="${bw}" height="${base - y(A)}" class="b-a"/>
+    <rect x="${xs[0]}" y="${y(A)}" width="${bw}" height="${base - y(A)}" class="b-a" data-t="0"/>
     ${lbl(xs[0], y(A) - 10, M(A))}
     <line x1="${xs[0] + bw}" x2="${xs[1]}" y1="${y(A)}" y2="${y(A)}" class="guia"/>
-    <rect x="${xs[1]}" y="${y(A)}" width="${bw}" height="${Math.max(0, y(Math.max(A - I, 0)) - y(A))}" class="b-i"/>
+    <rect x="${xs[1]}" y="${y(A)}" width="${bw}" height="${Math.max(0, y(Math.max(A - I, 0)) - y(A))}" class="b-i" data-t="1"/>
     ${lbl(xs[1], y(A) - 10, '−' + M(I), 'neg')}
     <line x1="${xs[1] + bw}" x2="${xs[2]}" y1="${y(Math.max(N, 0))}" y2="${y(Math.max(N, 0))}" class="guia"/>
-    <rect x="${xs[2]}" y="${N >= 0 ? yN : base}" width="${bw}" height="${N >= 0 ? base - yN : Math.min(hN, 4)}" class="${N >= 0 ? 'b-n' : 'b-i'}"/>
+    <rect x="${xs[2]}" y="${N >= 0 ? yN : base}" width="${bw}" height="${N >= 0 ? base - yN : Math.min(hN, 4)}" class="${N >= 0 ? 'b-n' : 'b-i'}" data-t="2"/>
     ${lbl(xs[2], (N >= 0 ? yN : base) - 10, M(N), N >= 0 ? 'oro' : 'neg')}
-    <text x="${xs[0] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce">Ahorro bruto</text>
-    <text x="${xs[1] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce">Inversión BIM</text>
-    <text x="${xs[2] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce oro">Ahorro neto</text>`;
+    <text x="${xs[0] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce">Sobrecostos evitados</text>
+    <text x="${xs[1] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce">Honorarios BIM</text>
+    <text x="${xs[2] + bw / 2}" y="${base + 26}" text-anchor="middle" class="ce oro">Ganancia neta</text>
+    ${xs.map((x, i) => `<rect x="${x - 20}" y="${top - 20}" width="${bw + 40}" height="${base - top + 56}" class="zona" data-t="${i}"/>`).join('')}`;
 }
 
 // ── 09.2 curva de escala ──
@@ -184,13 +207,28 @@ function render(anim = true) {
   const d = anim ? 0.8 : 0;
   // controles
   $('#cP')!.textContent = M(st.P); $('#cS')!.textContent = PCT(st.s);
-  contar($('#cI'), 'cI', c.I, M, d);
+  contar($('#cI'), 'cI', c.I, (v) => M(v) + (st.iva ? ' con IVA' : ''), d);
   // 09.1
   contar($('#oNeto'), 'oNeto', c.N, M, d); contar($('#oBruto'), 'oBruto', c.A, M, d);
   contar($('#oRoi'), 'oRoi', c.roi, X, d); contar($('#oPct'), 'oPct', c.pctBim, (v) => PCT(v), d);
-  const p = fmtPay(c.pay); $('#oPay')!.textContent = p.b; $('#oPayE')!.textContent = p.e;
+  const p = fmtPay(c.pay); $('#oPay')!.textContent = p.b;
+  const sinRetorno = 'Con estos supuestos el ahorro no alcanza a cubrir el servicio.';
+  $('#oPayE')!.textContent = c.pay === null ? sinRetorno : `En la ${semana(c.pay)}ª semana de obra el servicio ya se pagó solo.`;
+  $('#oRoiE')!.textContent = `Por cada $1 invertido en BIM, recuperas $${(Math.round(c.roi * 10) / 10).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
+  const iva = st.iva ? ' con IVA' : '';
+  const Mill = (v: number) => M(v).replace(/ M$/, ' Millones');
+  const pctTxt = PCT(st.s, st.s % 1 ? 1 : 0);
+  $('#oPie')!.textContent = `Ganancia neta = Sobrecostos evitados (${M(c.A)}) menos Inversión BIM (${M(c.I)}). ` + (c.pay === null ? sinRetorno
+    : `El servicio se financia solo con los errores que previene ${c.pay - 1 <= 1 ? 'en el primer mes de obra' : `en los primeros ${Math.ceil(c.pay - 1)} meses de obra`}.`);
+  tips = [
+    `Equivale al ${pctTxt} del presupuesto de la obra (${M(st.P)}): costos que dejas de botar en demoliciones, parches y adicionales sorpresa.`,
+    `Inversión total en estructuración, coordinación de redes y acompañamiento técnico en obra ${st.iva ? '(con IVA incluido)' : '(sin IVA)'}.`,
+    c.N >= 0 ? 'Dinero líquido que se queda en la cuenta del proyecto tras pagar la totalidad del servicio BIM.' : 'Con estos supuestos el ahorro no alcanza a cubrir el servicio BIM: sube el presupuesto o el porcentaje.',
+  ];
   $('#oNeto')!.classList.toggle('neg', c.N < 0);
-  $('#oFrase')!.innerHTML = `En una obra de <b>${M(st.P)}</b>, coordinar con BIM evita <b>${M(c.A)}</b> (${PCT(st.s, st.s % 1 ? 1 : 0)}). Restando la inversión de <b>${M(c.I)}</b>${st.iva ? ' con IVA' : ''}, quedan <b class="oro">${M(c.N)}</b> para el proyecto.`;
+  $('#oFrase')!.innerHTML = c.N >= 0
+    ? `En una obra de <b>${M(st.P)}</b>, coordinar los planos evita botar <b>${M(c.A)} (el ${pctTxt})</b> en errores y demoliciones. Al descontar nuestros honorarios de <b>${M(c.I)}${iva}</b>, le quedan <b class="oro">${Mill(c.N)} libres a favor del proyecto</b>.`
+    : `En una obra de <b>${M(st.P)}</b>, coordinar los planos evita botar <b>${M(c.A)} (el ${pctTxt})</b>, pero los honorarios de <b>${M(c.I)}${iva}</b> superan ese ahorro: faltan <b>${M(-c.N)}</b>.`;
   gsap.to(cas, { A: c.A, I: c.I, duration: d, ease: 'power3.out', overwrite: 'auto', onUpdate: dibujarCascada });
   if (!d) dibujarCascada();
   // 09.2
@@ -208,6 +246,7 @@ function render(anim = true) {
 }
 
 export function iniciarRoi() {
+  iniciarTips();
   if (!$('#rP')) return;
   const rP = $<HTMLInputElement>('#rP'), rS = $<HTMLInputElement>('#rS');
   rP.addEventListener('input', () => { st.P = +rP.value; render(true); destello($('#oNeto')); });
