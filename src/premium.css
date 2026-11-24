@@ -527,7 +527,137 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
 }
 /* ROI en laptop: título contenido y datos en una fila */
 [data-escena="roi"] h2 { font-size: clamp(34px, min(3.8vw, 6.4vh), 58px); }
-[data-escena="roi"] .stats { flex-wrap: nowrap; margin-top: clamp(18px, 3vh, 34px); }
-[data-escena="roi"] .stat { padding-right: 24px; margin-right: 24px; }
-[data-escena="roi"] .stat b { font-size: clamp(26px, 3.6vh, 34px); }
+.roi-sec .stats { flex-wrap: nowrap; margin-top: clamp(18px, 3vh, 34px); }
+.roi-sec .stat { padding-right: 24px; margin-right: 24px; }
+.roi-sec .stat b { font-size: clamp(26px, 3.6vh, 34px); }
 [data-escena="roi"] .lead { margin-top: clamp(12px, 2vh, 26px); }
+
+/* ══ 09 · calculadora ROI (tres secciones) ══ */
+.roi-sec .txt { max-width: 520px; }
+.calc { display: grid; gap: 22px; margin-top: 28px; }
+.ctrl label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--txt2); font-weight: 700; }
+.ctrl label b { font-size: 22px; letter-spacing: -.01em; text-transform: none; color: #fff; font-weight: 300; font-variant-numeric: tabular-nums; }
+.ctrl input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin-top: 6px; background: transparent; cursor: pointer; --f: 50%; }
+.ctrl input[type=range]::-webkit-slider-runnable-track { height: 3px; background: linear-gradient(90deg, var(--oro) var(--f), rgba(220,229,236,.16) var(--f)); }
+.ctrl input[type=range]::-moz-range-track { height: 3px; background: rgba(220,229,236,.16); }
+.ctrl input[type=range]::-moz-range-progress { height: 3px; background: var(--oro); }
+.ctrl input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7.5px; background: var(--fondo); border: 2px solid var(--oro); transform: rotate(45deg); transition: transform .2s, background .2s; }
+.ctrl input[type=range]::-moz-range-thumb { width: 14px; height: 14px; background: var(--fondo); border: 2px solid var(--oro); border-radius: 0; transform: rotate(45deg); }
+.ctrl input[type=range]:active::-webkit-slider-thumb { background: var(--oro); transform: rotate(45deg) scale(1.25); }
+.atajos, .chips-esc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.atajos button, .chips-esc button { font-size: 11.5px; padding: 6px 10px; border: 1px solid var(--hilo); border-radius: 2px; color: var(--txt2); transition: color .25s, border-color .25s, background .25s; }
+.atajos button:hover, .chips-esc button:hover { color: #fff; border-color: var(--hilo2); }
+.chips-esc button.on { background: var(--oro); border-color: var(--oro); color: var(--fondo); font-weight: 700; }
+.fila-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.seg.chico { margin-top: 0; padding: 3px; }
+.seg.chico button { padding: 7px 11px; font-size: 11px; }
+.iva { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--txt2); letter-spacing: .08em; cursor: pointer; }
+.iva input { accent-color: var(--oro); width: 15px; height: 15px; }
+
+.roi-res { flex: 1; min-width: 340px; max-width: 640px; margin-left: auto; background: var(--fondo); border: 1px solid var(--hilo); border-top: 3px solid var(--oro); padding: 24px 26px 18px; }
+.res-top small, .res-kpis small, .lectura small { display: block; font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--txt2); font-weight: 700; }
+.res-top .big { display: block; font-size: clamp(44px, min(5vw, 8vh), 74px); font-weight: 200; letter-spacing: -.035em; line-height: 1.05; color: var(--oro); font-variant-numeric: tabular-nums; margin: 4px 0 8px; }
+.res-top .big.neg, .lectura .neg { color: #ff8a77; }
+.res-top p { font-size: 14px; line-height: 1.55; color: var(--txt2); }
+.res-top p b { color: #fff; font-weight: 600; }
+.res-top p b.oro { color: var(--oro); }
+.res-kpis { display: grid; grid-template-columns: repeat(4, 1fr); margin: 18px 0 6px; border-top: 1px solid var(--hilo); border-bottom: 1px solid var(--hilo); }
+.res-kpis > div { padding: 12px 10px 12px 12px; border-right: 1px solid var(--hilo); }
+.res-kpis > div:first-child { padding-left: 0; }
+.res-kpis > div:last-child { border-right: 0; }
+.res-kpis b { display: block; font-size: 22px; font-weight: 300; margin: 4px 0 2px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.res-kpis em { font-style: normal; font-size: 11.5px; color: var(--txt2); }
+#cascada { width: 100%; height: auto; margin-top: 8px; overflow: visible; }
+#cascada .eje { stroke: var(--hilo2); }
+#cascada .guia { stroke: rgba(220,229,236,.3); stroke-dasharray: 3 4; }
+#cascada .b-a { fill: rgba(213,190,145,.28); stroke: var(--oro); }
+#cascada .b-i { fill: rgba(224,83,63,.3); stroke: #ff8a77; }
+#cascada .b-n { fill: var(--oro); }
+#cascada text { font-family: Manrope, sans-serif; }
+#cascada .cv { font-size: 15px; fill: #fff; font-weight: 600; }
+#cascada .cv.neg { fill: #ff8a77; }
+#cascada .cv.oro { fill: var(--oro); }
+#cascada .ce { font-size: 11px; fill: var(--txt2); letter-spacing: .14em; text-transform: uppercase; font-weight: 700; }
+#cascada .ce.oro { fill: var(--oro); }
+.formula { font-size: 11.5px; color: rgba(220,229,236,.5); line-height: 1.5; margin-top: 10px; border-top: 1px solid var(--hilo); padding-top: 10px; }
+
+.roi-sec .roi-panel { background: var(--fondo); border: 1px solid var(--hilo); border-radius: var(--r); box-shadow: none; max-width: 680px; }
+#curvaRoi, #amort { width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+#curvaRoi { cursor: ew-resize; }
+#curvaRoi text, #amort text { font-family: Manrope, sans-serif; }
+#curvaRoi .grid, #amort .grid { stroke: rgba(220,229,236,.08); }
+#curvaRoi .cx, #amort .cx { font-size: 10.5px; fill: rgba(220,229,236,.55); }
+#curvaRoi .cx.rojo { fill: #ff8a77; }
+#curvaRoi .banda { fill: rgba(213,190,145,.12); stroke: rgba(213,190,145,.25); }
+#curvaRoi .equilibrio { stroke: #ff8a77; stroke-dasharray: 4 5; }
+#curvaRoi .linea-s { fill: none; stroke: var(--oro); stroke-width: 2.6; }
+.marcador .m-l { stroke: rgba(255,255,255,.5); stroke-dasharray: 2 4; }
+.marcador .m-c { fill: var(--fondo); stroke: var(--oro); stroke-width: 2.5; }
+.m-box { fill: var(--panel); stroke: var(--oro); }
+.m-t1 { font-size: 13px; font-weight: 700; fill: #fff; }
+.m-t2 { font-size: 11px; fill: var(--oro); }
+#amort .zona-obra { fill: rgba(213,190,145,.04); }
+#amort .area-ah { fill: rgba(213,190,145,.1); }
+#amort .l-inv { fill: none; stroke: #ff8a77; stroke-width: 2; }
+#amort .l-ah { fill: none; stroke: var(--oro); stroke-width: 2.6; }
+#amort .pay-c { fill: var(--oro); }
+#amort .pay-onda { fill: none; stroke: var(--oro); animation: onda-pay 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes onda-pay { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
+#amort .c-l { stroke: #fff; stroke-width: 1; }
+#amort .c-ah { fill: var(--oro); }
+#amort .c-inv { fill: #ff8a77; }
+.lectura { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; border-bottom: 1px solid var(--hilo); padding-bottom: 12px; margin-bottom: 6px; }
+.lectura > div { padding: 0 10px; border-left: 1px solid var(--hilo); }
+.lectura > div:first-child { padding-left: 0; border: 0; }
+.lectura b { display: block; font-size: 17px; font-weight: 400; margin-top: 4px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lectura .oro { color: var(--oro); }
+#aMes { font-size: 14px; font-weight: 600; white-space: normal; }
+.leyenda-a { display: flex; gap: 20px; font-size: 12px; color: var(--txt2); margin-top: 4px; }
+.leyenda-a span { display: flex; align-items: center; gap: 8px; }
+.leyenda-a i { width: 18px; height: 2px; }
+.leyenda-a .li { background: #ff8a77; }
+.leyenda-a .la { background: var(--oro); }
+#tablaRoi td small { display: block; font-size: 11px; color: var(--txt2); font-weight: 400; }
+#btnSimular { margin-top: 26px; }
+[data-escena="roi3"] .roi-etapas-box { margin-top: 26px; }
+.roi-sec h2 { font-size: clamp(34px, min(3.8vw, 6.4vh), 58px); }
+
+@media (max-width: 1200px) {
+  .res-kpis { grid-template-columns: repeat(2, 1fr); }
+  .res-kpis > div:nth-child(2) { border-right: 0; }
+  .res-kpis > div:nth-child(3) { padding-left: 0; }
+  .res-kpis > div:nth-child(-n+2) { border-bottom: 1px solid var(--hilo); }
+}
+@media (max-width: 900px) {
+  .roi-res, .roi-sec .roi-panel { min-width: 0; width: 100%; max-width: 100%; margin-left: 0; padding: 18px 14px; }
+  .res-top .big { font-size: 46px; }
+  .res-kpis b { font-size: 19px; }
+  .lectura { grid-template-columns: 1fr 1fr; row-gap: 10px; }
+  .lectura > div:nth-child(3) { padding-left: 0; border: 0; }
+  .ctrl label b { font-size: 19px; }
+}
+
+/* ══ 09 · extra animado ══ */
+.demo-tag { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oro); font-weight: 700; opacity: 0; visibility: hidden; }
+.demo-tag i { width: 8px; height: 8px; background: var(--oro); transform: rotate(45deg); animation: demo-latido 1.2s ease-in-out infinite; }
+@keyframes demo-latido { 50% { opacity: .25; transform: rotate(45deg) scale(.7); } }
+.calc { margin-top: 14px; }
+/* flujo que corre sobre las líneas */
+#curvaRoi .linea-flujo, #amort .l-flujo { fill: none; stroke: #fff; stroke-width: 2.6; stroke-dasharray: 2 22; stroke-linecap: round; opacity: .75; animation: flujo-l 1.4s linear infinite; }
+@keyframes flujo-l { to { stroke-dashoffset: -24; } }
+#cascada .guia { animation: flujo-l 1s linear infinite; stroke-dasharray: 3 4; }
+#cascada .b-n { animation: neto-respira 2.6s ease-in-out infinite; }
+@keyframes neto-respira { 50% { filter: drop-shadow(0 0 14px rgba(213,190,145,.55)); } }
+#cascada .b-a { fill: url(#gA); }
+/* marcador de escala: anillo que late */
+.marcador .m-c { animation: m-late 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes m-late { 50% { stroke-width: 5; } }
+/* lectura de amortización: cada valor parpadea suave al cambiar de signo */
+#aBal { display: inline-block; transform-origin: left center; transition: color .4s; }
+#aBal:not(.neg) { color: var(--oro); }
+.res-top .big { transition: color .4s; }
+/* controles: el valor activo respira */
+.ctrl label b { transition: color .3s; }
+.chips-esc button.on, .seg button.on { animation: chip-on .5s cubic-bezier(.2,.9,.3,1.4); }
+@keyframes chip-on { from { transform: scale(.88); } }
+@media (prefers-reduced-motion: reduce) { #curvaRoi .linea-flujo, #amort .l-flujo, #cascada .guia, #cascada .b-n, .marcador .m-c, .demo-tag i { animation: none; } }

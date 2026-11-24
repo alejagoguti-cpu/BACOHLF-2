@@ -193,61 +193,88 @@
     <div class="resp" id="resp" data-a="fly"><small>BACO STUDIO</small><p>Establecer requisitos, administrar BEP/CDE, coordinar, verificar entregas e integrar el cierre digital.</p></div>
   </section>
 
-  <!-- 09 ROI Y RETORNO FINANCIERO -->
+  <!-- 09.1 ROI · CALCULADORA -->
   <section class="esc izq ancho roi-sec" data-escena="roi">
     <div class="txt">
-      <p class="k" data-a="up">09 · Retorno de inversión</p>
+      <p class="k" data-a="up">09 · Retorno de inversión · Calculadora</p>
       <h2 data-a="words">Más allá del modelo: <b>¿Cuánto dinero gana el proyecto?</b></h2>
-      <p class="lead" data-a="up">BIM no es un entregable estético ni un costo adicional; es una herramienta de blindaje financiero. En proyectos coordinados, el ahorro directo neto ronda entre el 6% y el 14% al mitigar reprocesos y adicionales imprevistos.</p>
-      
+      <p class="lead" data-a="up">BIM no es un costo adicional: es blindaje financiero. Mueve las variables y mira el resultado en vivo.</p>
+      <p class="demo-tag"><i></i>Demostración automática · toca un control para tomar el mando</p>
+      <div class="calc" data-a="stagger">
+        <div class="ctrl">
+          <label for="rP">Presupuesto de obra <b id="cP">$10.000 M</b></label>
+          <input id="rP" type="range" min="3000" max="40000" step="500" value="10000" />
+          <div class="atajos"><button data-p="5000">$5.000 M</button><button data-p="10000">$10.000 M</button><button data-p="20000">$20.000 M</button><button data-p="30000">$30.000 M</button></div>
+        </div>
+        <div class="ctrl">
+          <label for="rS">Ahorro por coordinación <b id="cS">10%</b></label>
+          <input id="rS" type="range" min="6" max="14" step="0.5" value="10" />
+          <div class="chips-esc"><button data-s="6">Conservador · 6%</button><button data-s="10" class="on">Medio · 10%</button><button data-s="14">Alto · 14%</button></div>
+        </div>
+        <div class="ctrl">
+          <label>Inversión BIM <b id="cI">$0 M</b></label>
+          <div class="fila-ctrl">
+            <div class="seg chico" id="rModo"><button data-m="solo" class="on">Solo BIM</button><button data-m="int">BIM + construcción</button></div>
+            <div class="seg chico" id="rMesesR"><button data-n="6" class="on">6 m</button><button data-n="7">7 m</button><button data-n="8">8 m</button><button data-n="9">9 m</button></div>
+            <label class="iva"><input type="checkbox" id="rIva" checked /> IVA</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="roi-res" data-a="fly">
+      <div class="res-top">
+        <small>Ahorro neto para el proyecto</small>
+        <b id="oNeto" class="big">$0 M</b>
+        <p id="oFrase"></p>
+      </div>
+      <div class="res-kpis">
+        <div><small>Ahorro bruto</small><b id="oBruto">$0 M</b><em>costos evitados</em></div>
+        <div><small>Retorno</small><b id="oRoi">0x</b><em>por cada $1 en BIM</em></div>
+        <div><small>BIM sobre la obra</small><b id="oPct">0%</b><em>del presupuesto</em></div>
+        <div><small>Se recupera</small><b id="oPay">—</b><em id="oPayE">de obra</em></div>
+      </div>
+      <svg id="cascada" viewBox="0 0 600 250" aria-label="Ahorro bruto menos inversión BIM igual a ahorro neto"></svg>
+      <p class="formula">Ahorro neto = presupuesto × % de ahorro − inversión BIM. Inversión = etapas A, B y D ($111 M) + meses de obra × tarifa mensual, igual que en la oferta económica.</p>
+    </div>
+  </section>
+
+  <!-- 09.2 ROI · ECONOMÍA DE ESCALA -->
+  <section class="esc izq ancho roi-sec" data-escena="roi2">
+    <div class="txt">
+      <p class="k" data-a="up">09 · Retorno de inversión · Escala</p>
+      <h2 data-a="words">A mayor obra, <b>mayor retorno</b></h2>
+      <p class="lead" data-a="up">La inversión BIM es casi fija; el ahorro crece con el presupuesto. Arrastra el marcador sobre la curva para comparar.</p>
       <div class="stats" data-a="stagger">
         <div class="stat"><small>Ahorro total medido</small><b>14.2%</b></div>
         <div class="stat"><small>Reducción reprocesos</small><b>-20%</b></div>
         <div class="stat"><small>Reducción de plazo</small><b>-10%</b></div>
       </div>
-      
-      <p class="nota" data-a="up">En una obra de $10.000 M, una inversión BIM del 2.9% (~$293 M) genera más de $600 M netos en costos evitados. A mayor escala ($20.000 M a $30.000 M), el costo de BIM baja al 1.5% y el retorno supera los $1.500 Millones.</p>
+      <p class="nota" data-a="up">La banda muestra el rango de ahorro de la propuesta (6% a 14%); la línea dorada, el escenario elegido en la calculadora.</p>
     </div>
-
-    <div class="roi-panel glass" data-a="tilt">
+    <div class="roi-panel" data-a="fly">
       <div class="roi-header">
-        <span class="roi-tag">Economía de Escala</span>
-        <h3>Impacto financiero por presupuesto de obra</h3>
-        <p>Inversión fija de referencia en gestión y coordinación BIM: <b>~$293 M</b></p>
+        <span class="roi-tag">Economía de escala</span>
+        <h3>Retorno por presupuesto de obra</h3>
+        <p>Inversión BIM de referencia: <b data-v="inv">—</b></p>
       </div>
+      <svg id="curvaRoi" viewBox="0 0 640 300" aria-label="Retorno según presupuesto de obra"></svg>
       <div class="roi-tabla-w">
-        <table class="roi-tabla">
-          <thead>
-            <tr>
-              <th>Presupuesto</th>
-              <th>% Costo BIM</th>
-              <th>Ahorro Neto</th>
-              <th>Retorno (ROI)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>$10.000 M</b></td>
-              <td>2.9%</td>
-              <td class="oro">+$600 M a $1.120 M</td>
-              <td><span class="badge-roi">3.0x a 4.7x</span></td>
-            </tr>
-            <tr class="destacado">
-              <td><b>$20.000 M</b></td>
-              <td>1.5%</td>
-              <td class="oro">+$1.500 M a $2.540 M</td>
-              <td><span class="badge-roi oro">6.0x a 9.5x</span></td>
-            </tr>
-            <tr>
-              <td><b>$30.000 M</b></td>
-              <td>0.9%</td>
-              <td class="oro">+$2.400 M a $3.960 M</td>
-              <td><span class="badge-roi">9.0x a 14.0x</span></td>
-            </tr>
-          </tbody>
+        <table class="roi-tabla" id="tablaRoi">
+          <thead><tr><th>Presupuesto</th><th>% costo BIM</th><th>Ahorro neto (6%–14%)</th><th>Retorno</th></tr></thead>
+          <tbody></tbody>
         </table>
       </div>
-      <div class="roi-etapas-box">
+    </div>
+  </section>
+
+  <!-- 09.3 ROI · AMORTIZACIÓN -->
+  <section class="esc izq ancho roi-sec" data-escena="roi3">
+    <div class="txt">
+      <p class="k" data-a="up">09 · Retorno de inversión · Amortización</p>
+      <h2 data-a="words">La inversión <b>se paga sola</b></h2>
+      <p class="lead" data-a="up">Mes a mes: lo que se paga en BIM frente a lo que se deja de perder en obra. Además, la obra se acorta en <b data-v="dias">—</b> (10% de plazo).</p>
+      <button class="btn oro" id="btnSimular" data-a="pop">Simular la obra <span><i data-i="der"></i></span></button>
+      <div class="roi-etapas-box" data-a="stagger">
         <div class="roi-etapa">
           <small>Etapa 1 · Pre-construcción (5D)</small>
           <b>Presupuesto real y trazado</b>
@@ -259,8 +286,18 @@
           <p>Eliminación de interferencias MEP vs estructura. Decisiones tomadas en modelo antes de comprar o demoler.</p>
         </div>
       </div>
+    </div>
+    <div class="roi-panel" data-a="fly">
+      <div class="lectura">
+        <div><small>Momento</small><b id="aMes">—</b></div>
+        <div><small>Invertido en BIM</small><b id="aInv" class="neg">—</b></div>
+        <div><small>Ahorro acumulado</small><b id="aAh" class="oro">—</b></div>
+        <div><small>Balance</small><b id="aBal">—</b></div>
+      </div>
+      <svg id="amort" viewBox="0 0 640 300" aria-label="Inversión acumulada frente a ahorro acumulado"></svg>
+      <div class="leyenda-a"><span><i class="li"></i>Inversión BIM acumulada</span><span><i class="la"></i>Ahorro acumulado en obra</span></div>
       <div class="roi-pitch">
-        <p><strong>El principio de amortización:</strong> Una inversión de $293 Millones que se paga sola en el primer mes de obra con el primer muro o cruce de redes que no tengan que demoler.</p>
+        <p><strong>El principio de amortización:</strong> una inversión de <span data-v="inv">—</span> que se recupera <span data-v="pay">—</span>, con el primer muro o cruce de redes que no haya que demoler.</p>
       </div>
     </div>
   </section>
