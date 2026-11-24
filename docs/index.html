@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-DohpNmBe.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CH8O2Z7Z.css">
+  <script type="module" crossorigin src="./assets/index-Cco2owwW.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DM_1ahNJ.css">
 </head>
 <body data-modo="cine">
 <div id="glow"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
@@ -199,8 +199,8 @@
   <section class="esc izq ancho roi-sec" data-escena="roi">
     <div class="txt">
       <p class="k" data-a="up">09 · Impacto económico en plata</p>
-      <h2 data-a="words">¿Cuánto dinero real <b>se ahorra la obra?</b></h2>
-      <p class="lead" data-a="up">En una obra tradicional, entre el <b>6% y el 14%</b> del presupuesto se pierde en demoliciones, tubos que no caben y adicionales sorpresa. Con BIM, esos errores se resuelven en el computador antes de comprar el primer ladrillo.</p>
+      <h2 data-a="words">¿Cuánto dinero se fuga <b>en una obra sin coordinar?</b></h2>
+      <p class="lead" data-a="up">En una obra tradicional, entre el <b>6% y el 14%</b> del presupuesto se pierde en demoliciones, tuberías que se cruzan con vigas y adicionales sorpresa. Con BIM, todos esos errores se detectan y resuelven en el computador antes de comprar el primer ladrillo.</p>
       <p class="demo-tag"><i></i>Demostración automática · toca un control para tomar el mando</p>
       <div class="calc" data-a="stagger">
         <div class="ctrl">
@@ -209,34 +209,25 @@
           <div class="atajos"><button data-p="5000">$5.000 M</button><button data-p="10000">$10.000 M</button><button data-p="20000">$20.000 M</button><button data-p="30000">$30.000 M</button></div>
         </div>
         <div class="ctrl">
-          <label for="rS">Sobrecosto evitado por coordinar <b id="cS">10%</b></label>
+          <label for="rS">Sobrecosto típico evitado <b id="cS">10,0%</b></label>
           <input id="rS" type="range" min="6" max="14" step="0.5" value="10" />
           <div class="chips-esc"><button data-s="6">Conservador 6%</button><button data-s="10" class="on">Medio 10%</button><button data-s="14">Alto 14%</button></div>
         </div>
-        <div class="ctrl">
-          <label>Costo de la gestión BIM <b id="cI">$0 M</b></label>
-          <div class="fila-ctrl">
-            <div class="seg chico" id="rModo"><button data-m="solo" class="on">Solo BIM</button><button data-m="int">BIM + construcción</button></div>
-            <div class="seg chico" id="rMesesR"><button data-n="6" class="on">6 m</button><button data-n="7">7 m</button><button data-n="8">8 m</button><button data-n="9">9 m</button></div>
-            <label class="iva"><input type="checkbox" id="rIva" checked /> IVA</label>
-          </div>
-        </div>
       </div>
     </div>
-    <div class="roi-res" data-a="fly">
+    <div class="roi-res fuga" data-a="fly">
       <div class="res-top">
-        <small>Ganancia limpia para el proyecto</small>
-        <b id="oNeto" class="big">$0 M</b>
+        <small>Sobrecosto evitado en obra</small>
+        <b class="big fuga-big"><span id="oFuga">$0</span> <em>Millones</em></b>
         <p id="oFrase"></p>
       </div>
-      <div class="res-kpis">
-        <div><small>Ahorro en obra</small><b id="oBruto">$0 M</b><em>Errores y demoliciones que no vas a pagar.</em></div>
-        <div><small>Retorno (ROI)</small><b id="oRoi">0x</b><em id="oRoiE">Por cada $1 invertido en BIM, recuperas $3,40.</em></div>
-        <div><small>Peso de BIM</small><b id="oPct">0%</b><em>Del valor total de la construcción.</em></div>
-        <div><small>Punto de equilibrio</small><b id="oPay">—</b><em id="oPayE">En la 3ª semana de obra el servicio ya se pagó solo.</em></div>
+      <small class="fuga-t">Desglose de dónde se va esa plata</small>
+      <div class="fuga-barra" aria-hidden="true"><i class="g0"></i><i class="g1"></i><i class="g2"></i></div>
+      <div class="gastos">
+        <div class="gasto g0"><small>Reprocesos y demoliciones <em>45%</em></small><b id="oG0">$0 M</b><p>Tumbar muros levantados y rehacer instalaciones mal cruzadas.</p><span class="gasto-l"><i></i></span></div>
+        <div class="gasto g1"><small>Adicionales imprevistos <em>35%</em></small><b id="oG1">$0 M</b><p>Actividades sorpresa que no se contemplaron en los planos 2D.</p><span class="gasto-l"><i></i></span></div>
+        <div class="gasto g2"><small>Mermas y desperdicio de material <em>20%</em></small><b id="oG2">$0 M</b><p>Cálculos inexactos de compras y cortes en obra.</p><span class="gasto-l"><i></i></span></div>
       </div>
-      <div class="cas-wrap"><svg id="cascada" viewBox="0 0 600 250" aria-label="Sobrecostos evitados menos honorarios BIM igual a ganancia neta"></svg><div id="casTip" role="tooltip"></div></div>
-      <p class="formula" id="oPie">Ganancia neta = Sobrecostos evitados ($1.000 M) menos Inversión BIM ($296 M). El servicio se financia solo con los errores que previene en el primer mes de obra.</p>
     </div>
   </section>
 

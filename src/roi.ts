@@ -59,7 +59,9 @@ function contar(el: Element | null, clave: string, valor: number, fmt: (v: numbe
 }
 function destello(el: Element | null) { if (el) gsap.fromTo(el, { color: '#ffffff' }, { color: '', duration: 0.9, ease: 'power2.out', clearProps: 'color' }); }
 
-// ── 09.1 cascada ──
+// ── 09.1 desglose del sobrecosto (proporciones del texto de la propuesta) ──
+const GASTO = [0.45, 0.35, 0.20];
+// ── 09.1 cascada (ya no está en la página; las funciones no hacen nada si falta el SVG) ──
 let tips: string[] = [];
 const semana = (t: number) => Math.max(1, Math.ceil(Math.max(1, Math.round((t - 1) * 30)) / 7));
 /** Tooltips de las barras: explican qué es cada cifra al pasar el cursor (o al tocar en celular). */
@@ -215,30 +217,13 @@ function render(anim = true) {
   const d = anim ? 0.8 : 0;
   // controles
   $('#cP')!.textContent = M(st.P); $('#cS')!.textContent = PCT(st.s);
-  contar($('#cI'), 'cI', c.I, (v) => M(v) + (st.iva ? ' con IVA' : ''), d);
-  // 09.1
-  contar($('#oNeto'), 'oNeto', c.N, M, d); contar($('#oBruto'), 'oBruto', c.A, M, d);
-  contar($('#oRoi'), 'oRoi', c.roi, X, d); contar($('#oPct'), 'oPct', c.pctBim, (v) => PCT(v), d);
-  const p = fmtPay(c.pay); $('#oPay')!.textContent = p.b;
-  const sinRetorno = 'Con estos supuestos el ahorro no alcanza a cubrir el servicio.';
-  $('#oPayE')!.textContent = c.pay === null ? sinRetorno : `En la ${semana(c.pay)}ª semana de obra el servicio ya se pagó solo.`;
-  $('#oRoiE')!.textContent = `Por cada $1 invertido en BIM, recuperas $${(Math.round(c.roi * 10) / 10).toLocaleString('es-CO', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`;
-  const iva = st.iva ? ' con IVA' : '';
+  // 09.1 · sobrecosto evitado y su desglose
   const Mill = (v: number) => M(v).replace(/ M$/, ' Millones');
   const pctTxt = PCT(st.s, st.s % 1 ? 1 : 0);
-  $('#oPie')!.textContent = `Ganancia neta = Sobrecostos evitados (${M(c.A)}) menos Inversión BIM (${M(c.I)}). ` + (c.pay === null ? sinRetorno
-    : `El servicio se financia solo con los errores que previene ${c.pay - 1 <= 1 ? 'en el primer mes de obra' : `en los primeros ${Math.ceil(c.pay - 1)} meses de obra`}.`);
-  tips = [
-    `Equivale al ${pctTxt} del presupuesto de la obra (${M(st.P)}): costos que dejas de botar en demoliciones, parches y adicionales sorpresa.`,
-    `Inversión total en estructuración, coordinación de redes y acompañamiento técnico en obra ${st.iva ? '(con IVA incluido)' : '(sin IVA)'}.`,
-    c.N >= 0 ? 'Dinero líquido que se queda en la cuenta del proyecto tras pagar la totalidad del servicio BIM.' : 'Con estos supuestos el ahorro no alcanza a cubrir el servicio BIM: sube el presupuesto o el porcentaje.',
-  ];
-  $('#oNeto')!.classList.toggle('neg', c.N < 0);
-  $('#oFrase')!.innerHTML = c.N >= 0
-    ? `En una obra de <b>${M(st.P)}</b>, coordinar los planos evita botar <b>${M(c.A)} (el ${pctTxt})</b> en errores y demoliciones. Al descontar nuestros honorarios de <b>${M(c.I)}${iva}</b>, le quedan <b class="oro">${Mill(c.N)} libres a favor del proyecto</b>.`
-    : `En una obra de <b>${M(st.P)}</b>, coordinar los planos evita botar <b>${M(c.A)} (el ${pctTxt})</b>, pero los honorarios de <b>${M(c.I)}${iva}</b> superan ese ahorro: faltan <b>${M(-c.N)}</b>.`;
-  gsap.to(cas, { A: c.A, I: c.I, duration: d, ease: 'power3.out', overwrite: 'auto', onUpdate: dibujarCascada });
-  if (!d) dibujarCascada();
+  contar($('#oFuga'), 'oFuga', c.A, (v) => '$' + Math.round(v).toLocaleString('es-CO'), d);
+  GASTO.forEach((g, i) => contar($('#oG' + i), 'oG' + i, c.A * g, M, d));
+  const fr = $('#oFrase');
+  if (fr) fr.innerHTML = `En una obra de <b>${M(st.P)}</b>, no coordinar los diseños significa botar <b class="oro">${Mill(c.A)} (el ${pctTxt})</b> en picar muros, cambiar tuberías instaladas y pagar contratos adicionales que nadie tenía en el radar.`;
   // 09.2
   gsap.to(escMarcador, { P: st.P, duration: d * 0.8, ease: 'power3.out', overwrite: 'auto', onUpdate: dibujarEscala });
   if (!d) dibujarEscala();
@@ -258,12 +243,12 @@ export function iniciarRoi() {
   iniciarTips();
   if (!$('#rP')) return;
   const rP = $<HTMLInputElement>('#rP'), rS = $<HTMLInputElement>('#rS');
-  rP.addEventListener('input', () => { st.P = +rP.value; render(true); destello($('#oNeto')); });
-  rS.addEventListener('input', () => { st.s = +rS.value; render(true); destello($('#oNeto')); });
-  $$('.chips-esc button').forEach((b) => b.addEventListener('click', () => { st.s = +b.dataset.s!; rS.value = String(st.s); render(true); destello($('#oNeto')); }));
+  rP.addEventListener('input', () => { st.P = +rP.value; render(true); destello($('#oFuga')); });
+  rS.addEventListener('input', () => { st.s = +rS.value; render(true); destello($('#oFuga')); });
+  $$('.chips-esc button').forEach((b) => b.addEventListener('click', () => { st.s = +b.dataset.s!; rS.value = String(st.s); render(true); destello($('#oFuga')); }));
   $$('#rModo button').forEach((b) => b.addEventListener('click', () => { st.modo = b.dataset.m as Estado['modo']; $$('#rModo button').forEach((x) => x.classList.toggle('on', x === b)); render(true); }));
   $$('#rMesesR button').forEach((b) => b.addEventListener('click', () => { st.meses = +b.dataset.n!; $$('#rMesesR button').forEach((x) => x.classList.toggle('on', x === b)); render(true); }));
-  $<HTMLInputElement>('#rIva').addEventListener('change', (e) => { st.iva = (e.target as HTMLInputElement).checked; render(true); });
+  $<HTMLInputElement>('#rIva')?.addEventListener('change', (e) => { st.iva = (e.target as HTMLInputElement).checked; render(true); });
   $$('[data-p]').forEach((b) => b.addEventListener('click', () => { st.P = +b.dataset.p!; rP.value = String(st.P); render(true); }));
 
   // arrastrar el marcador sobre la curva de escala
@@ -278,7 +263,7 @@ export function iniciarRoi() {
   svgE.addEventListener('pointermove', (e) => { if (arr) mover(e); });
   svgE.addEventListener('pointerup', () => (arr = false));
 
-  $('#btnSimular')!.addEventListener('click', simular);
+  $('#btnSimular')?.addEventListener('click', simular);
   // cualquier toque en la calculadora detiene la demostración y le da el mando a la persona
   $('.calc')!.addEventListener('pointerdown', tomarMando, { capture: true });
   $('.calc')!.addEventListener('keydown', tomarMando, { capture: true });
@@ -297,8 +282,8 @@ let tocado1 = false; let demoT = 0; let demoK = 0;
 function aplicar(P: number, s: number) {
   st.P = P; st.s = s;
   ($('#rP') as HTMLInputElement).value = String(P); ($('#rS') as HTMLInputElement).value = String(s);
-  render(true); destello($('#oNeto'));
-  gsap.fromTo('#oNeto', { y: 8, opacity: 0.6 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' });
+  render(true); destello($('#oFuga'));
+  gsap.fromTo('.fuga-big', { y: 8, opacity: 0.6 }, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' });
 }
 function pasoDemo() {
   if (tocado1) return;
@@ -316,15 +301,12 @@ function pararDemo() {
   if (!tocado1 && (st.P !== 10000 || st.s !== 10)) aplicar(10000, 10);
 }
 function entrar1() {
-  // la cascada aparece en secuencia: ahorro bruto, luego la inversión que se descuenta, luego el neto
-  const c = calc();
-  Object.keys(vis).forEach((k) => (vis[k] = 0));
-  cas.A = 0; cas.I = 0; dibujarCascada();
-  gsap.timeline({ delay: 0.6 })
-    .to(cas, { A: c.A, duration: 1, ease: 'power3.out', onUpdate: dibujarCascada })
-    .to(cas, { I: c.I, duration: 0.9, ease: 'power2.inOut', onUpdate: dibujarCascada }, '+=0.1')
-    .call(() => { ['oNeto', 'oBruto', 'oRoi', 'oPct', 'cI'].forEach((k) => (vis[k] = 0)); render(true); }, [], 0);
-  gsap.fromTo('.res-kpis > div', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, stagger: 0.1, duration: 0.5, delay: 0.9 });
+  // la cifra cuenta desde cero, la barra se reparte en sus tres tramos y cada tarjeta llena su porcentaje
+  ['oFuga', 'oG0', 'oG1', 'oG2'].forEach((k) => (vis[k] = 0));
+  gsap.delayedCall(0.6, () => render(true));
+  gsap.fromTo('.fuga-barra i', { scaleX: 0 }, { scaleX: 1, duration: 0.9, stagger: 0.25, ease: 'power3.inOut', delay: 0.9 });
+  gsap.fromTo('.gasto', { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, stagger: 0.15, duration: 0.6, ease: 'power3.out', delay: 1.1 });
+  gsap.fromTo('.gasto-l i', { scaleX: 0 }, { scaleX: 1, stagger: 0.15, duration: 1, ease: 'power3.inOut', delay: 1.5 });
   if (!tocado1) { clearTimeout(demoT); gsap.fromTo('.demo-tag', { autoAlpha: 0, y: 6 }, { autoAlpha: 1, y: 0, duration: 0.5, delay: 2 }); demoT = window.setTimeout(pasoDemo, 4200); }
 }
 
