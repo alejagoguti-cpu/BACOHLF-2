@@ -667,3 +667,15 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
   transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1), visibility 0s linear .6s; }
 body.dock-on #dock, body[data-modo="libre"] #dock { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%);
   transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1), visibility 0s; }
+
+/* diagrama 01 interactivo (diag.ts) */
+.diag .nd-pos.toca { cursor: pointer; }
+.diag .nd-pos.toca:hover circle { stroke-width: 2.4; filter: drop-shadow(0 0 8px var(--c)); }
+.diag .nd-pos.fuera circle { stroke-dasharray: 3 3; }
+.diag svg { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.diag figcaption .cnt { margin-left: 8px; font-weight: 700; color: var(--oro); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.diag .diag-hint { margin-top: 14px; text-align: center; font-size: 12px; letter-spacing: .02em; color: rgba(220,229,236,.5); }
+@media (max-width: 900px) {
+  .diag figcaption span { flex-wrap: wrap; }
+  .diag figcaption .cnt { flex-basis: 100%; margin-left: 28px; }
+}

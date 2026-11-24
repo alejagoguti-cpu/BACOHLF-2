@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ico } from './iconos';
+import { construirDiag, pulsosDiag } from './diag';
 gsap.registerPlugin(ScrollTrigger);
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T;
@@ -98,8 +99,10 @@ function animarSeccion(sec: HTMLElement) {
     [...lnA, ...lnB].forEach((p) => { const L = (p as unknown as SVGPathElement).getTotalLength(); gsap.set(p, { strokeDasharray: L, strokeDashoffset: L }); });
     tl.to(lnA, { strokeDashoffset: 0, duration: 0.9, stagger: 0.06, ease: 'power2.inOut' }, 1.0);
     tl.to(lnB, { strokeDashoffset: 0, duration: 0.8, stagger: 0.08, ease: 'power2.out' }, 1.9);
-    tl.fromTo($$('figcaption span', d), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.2 }, 2.5);
+    tl.fromTo($$('figcaption span, .diag-hint', d), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.2 }, 2.5);
     tl.call(() => pulsosDiag(d), [], 2.8);
+    // ya dibujadas: sin guiones, porque el largo de cada línea cambia cuando la red se reorganiza
+    tl.call(() => { gsap.set([...lnA, ...lnB], { clearProps: 'strokeDasharray,strokeDashoffset' }); }, [], 2.9);
   });
   // cronograma: las barras crecen desde su mes de inicio
   $$('[data-a="gantt"]', sec).forEach((g) => {
@@ -162,53 +165,7 @@ function animarSeccion(sec: HTMLElement) {
   return tl;
 }
 
-// ── diagrama "sin coordinación / modelo federado" ──
-const ESP = ['Arq.', 'Estr.', 'Hidro', 'RCI', 'Eléc.', 'Mec.'];
-const ESP_ICO = ['arquitectura', 'estructura', 'hidro', 'rci', 'electrica', 'mecanica'];
-const ESP_COL = ['#D5BE91', '#9fb6cc', '#3d8bff', '#ff7a2f', '#2fd0b5', '#c3cbd4'];
-function construirDiag() {
-  const ns = 'http://www.w3.org/2000/svg';
-  $$('[data-a="diag"]').forEach((d) => {
-    d.querySelector('svg')!.setAttribute('viewBox', '0 0 900 290');
-    // nodo: círculo con el ícono adentro y el nombre debajo
-    const nd = (x: number, y: number, t: string, icono: string, color: string, c = false) => {
-      const r = c ? 32 : 24; const s = c ? 28 : 22;
-      const svgIco = ico(icono).replace('<svg class="ico "', `<svg class="ic" x="${-s / 2}" y="${-s / 2}" width="${s}" height="${s}" style="color:${c ? '#001b3b' : color}"`);
-      return `<g class="nd${c ? ' c' : ''}" transform="translate(${x},${y})"><circle r="${r}" style="--c:${color}"/>${svgIco}<text y="${r + 16}">${t}</text></g>`;
-    };
-    // izquierda: nodos dispersos conectados todos contra todos (desorden)
-    const A = [[70, 70], [330, 60], [200, 125], [55, 200], [345, 205], [215, 235]];
-    let la = '';
-    A.forEach((p, i) => A.forEach((q, j) => { if (j > i && (i + j) % 2) la += `<path class="ln r" d="M${p[0]} ${p[1]} L${q[0]} ${q[1]}"/>`; }));
-    // derecha: cada especialidad conectada solo al modelo federado
-    const C = [700, 152]; const B = ESP.map((_, i) => { const a = -Math.PI / 2 + (i * Math.PI * 2) / 6; return [C[0] + Math.cos(a) * 190, C[1] + Math.sin(a) * 90]; });
-    const lb = B.map((p) => `<path class="ln o" d="M${p[0]} ${p[1]} L${C[0]} ${C[1]}"/>`).join('');
-    const gA = d.querySelector('.nodos-a')!; const gB = d.querySelector('.nodos-b')!;
-    gA.innerHTML = la + A.map((p, i) => nd(p[0], p[1], ESP[i], ESP_ICO[i], ESP_COL[i])).join('');
-    gB.innerHTML = lb + B.map((p, i) => nd(p[0], p[1], ESP[i], ESP_ICO[i], ESP_COL[i])).join('') + nd(C[0], C[1], 'BIM', 'cubo3d', '#D5BE91', true);
-    void ns;
-    // celular: los dos esquemas uno debajo del otro para que se lean
-    if (innerWidth < 900) {
-      const svg = d.querySelector('svg')!; svg.setAttribute('viewBox', '-15 0 480 590');
-      const [t1, t2] = [...svg.querySelectorAll('text.dt')]; t2.setAttribute('x', '250'); t2.setAttribute('y', '318'); void t1;
-      gB.setAttribute('transform', 'translate(-450 300)');
-      svg.querySelector('.sep')!.setAttribute('d', 'M40 292 H410');
-    }
-  });
-}
-/** Pulsos de información que viajan de cada especialidad al modelo federado, en bucle. */
-function pulsosDiag(d: HTMLElement) {
-  if (reducido || d.dataset.pulsos) return;
-  d.dataset.pulsos = '1';
-  const svg = d.querySelector('svg')!;
-  $$('.ln.o', d).forEach((p, i) => {
-    const path = p as unknown as SVGPathElement; const L = path.getTotalLength();
-    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); c.setAttribute('r', '3'); c.setAttribute('class', 'pulso-dot'); c.setAttribute('opacity', '0'); svg.appendChild(c);
-    const o = { t: 0 };
-    gsap.to(o, { t: 1, duration: 1.6, repeat: -1, delay: i * 0.27, ease: 'power1.in', repeatDelay: 0.6,
-      onUpdate: () => { const pt = path.getPointAtLength(o.t * L); c.setAttribute('cx', String(pt.x)); c.setAttribute('cy', String(pt.y)); c.setAttribute('opacity', String(o.t < 0.9 ? 1 : (1 - o.t) * 10)); } });
-  });
-}
+// diagrama 01: ver diag.ts (red interactiva)
 
 export function iniciarAnimaciones() {
   construirDiag();
