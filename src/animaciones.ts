@@ -163,36 +163,29 @@ function animarSeccion(sec: HTMLElement) {
 }
 
 // ── diagrama "sin coordinación / modelo federado" ──
-const ESP = ['Arquitectura', 'Estructura', 'Hidro', 'RCI', 'Eléctrica', 'Mecánica'];
-const ESP_ICO = ['arquitectura', 'estructura', 'hidro', 'rci', 'electrica', 'mecanica'];
-const ESP_COL = ['#D5BE91', '#9fb6cc', '#3d8bff', '#ff7a2f', '#2fd0b5', '#c3cbd4'];
+const ESP = ['Arq.', 'Estr.', 'Hidro', 'RCI', 'Eléc.', 'Mec.'];
 function construirDiag() {
   const ns = 'http://www.w3.org/2000/svg';
   $$('[data-a="diag"]').forEach((d) => {
-    d.querySelector('svg')!.setAttribute('viewBox', '0 0 900 290');
-    // nodo: círculo con el ícono adentro y el nombre debajo
-    const nd = (x: number, y: number, t: string, icono: string, color: string, c = false) => {
-      const r = c ? 32 : 24; const s = c ? 28 : 22;
-      const svgIco = ico(icono).replace('<svg class="ico "', `<svg class="ic" x="${-s / 2}" y="${-s / 2}" width="${s}" height="${s}" style="color:${c ? '#001b3b' : color}"`);
-      return `<g class="nd${c ? ' c' : ''}" transform="translate(${x},${y})"><circle r="${r}" style="--c:${color}"/>${svgIco}<text y="${r + 16}">${t}</text></g>`;
-    };
+    const nd = (x: number, y: number, t: string, c = false, w = 70) =>
+      `<g class="nd${c ? ' c' : ''}" transform="translate(${x},${y})"><rect x="${-w / 2}" y="-15" width="${w}" height="30" rx="2"/><text>${t}</text></g>`;
     // izquierda: nodos dispersos conectados todos contra todos (desorden)
-    const A = [[70, 70], [330, 60], [200, 125], [55, 200], [345, 205], [215, 235]];
+    const A = [[70, 70], [330, 60], [200, 120], [60, 200], [340, 205], [210, 225]];
     let la = '';
     A.forEach((p, i) => A.forEach((q, j) => { if (j > i && (i + j) % 2) la += `<path class="ln r" d="M${p[0]} ${p[1]} L${q[0]} ${q[1]}"/>`; }));
     // derecha: cada especialidad conectada solo al modelo federado
-    const C = [700, 152]; const B = ESP.map((_, i) => { const a = -Math.PI / 2 + (i * Math.PI * 2) / 6; return [C[0] + Math.cos(a) * 190, C[1] + Math.sin(a) * 90]; });
+    const C = [700, 140]; const B = ESP.map((_, i) => { const a = -Math.PI / 2 + (i * Math.PI * 2) / 6; return [C[0] + Math.cos(a) * 190, C[1] + Math.sin(a) * 92]; });
     const lb = B.map((p) => `<path class="ln o" d="M${p[0]} ${p[1]} L${C[0]} ${C[1]}"/>`).join('');
     const gA = d.querySelector('.nodos-a')!; const gB = d.querySelector('.nodos-b')!;
-    gA.innerHTML = la + A.map((p, i) => nd(p[0], p[1], ESP[i], ESP_ICO[i], ESP_COL[i])).join('');
-    gB.innerHTML = lb + B.map((p, i) => nd(p[0], p[1], ESP[i], ESP_ICO[i], ESP_COL[i])).join('') + nd(C[0], C[1], 'Modelo BIM', 'cubo3d', '#D5BE91', true);
+    gA.innerHTML = la + A.map((p, i) => nd(p[0], p[1], ESP[i])).join('');
+    gB.innerHTML = lb + B.map((p, i) => nd(p[0], p[1], ESP[i])).join('') + nd(C[0], C[1], 'BIM', true, 84);
     void ns;
     // celular: los dos esquemas uno debajo del otro para que se lean
     if (innerWidth < 900) {
-      const svg = d.querySelector('svg')!; svg.setAttribute('viewBox', '-15 0 480 590');
-      const [t1, t2] = [...svg.querySelectorAll('text.dt')]; t2.setAttribute('x', '250'); t2.setAttribute('y', '318'); void t1;
-      gB.setAttribute('transform', 'translate(-450 300)');
-      svg.querySelector('.sep')!.setAttribute('d', 'M40 292 H410');
+      const svg = d.querySelector('svg')!; svg.setAttribute('viewBox', '-15 0 480 520');
+      const [t1, t2] = [...svg.querySelectorAll('text.dt')]; t2.setAttribute('x', '250'); t2.setAttribute('y', '288'); void t1;
+      gB.setAttribute('transform', 'translate(-450 270)');
+      svg.querySelector('.sep')!.setAttribute('d', 'M40 262 H410');
     }
   });
 }
