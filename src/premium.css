@@ -695,3 +695,9 @@ body.dock-on #dock, body[data-modo="libre"] #dock { opacity: 1; visibility: visi
 .res-kpis em { font-style: normal; line-height: 1.4; }
 .roi-sec .lead b { color: #fff; font-weight: 600; }
 @media (min-width: 901px) { .res-kpis small { min-height: 2.7em; } }
+
+/* logo BACO STUDIO (blanco, horizontal): sin inversión de color */
+.marca img { width: auto; height: 42px; filter: none; opacity: 1; }
+.cierre .logo-cierre { width: min(260px, 60vw); height: auto; filter: drop-shadow(0 0 24px rgba(213,190,145,.35)); mix-blend-mode: normal; }
+#cargando img { width: 170px; height: auto; filter: none; }
+@media (max-width: 900px) { .marca img { height: 34px; } }
