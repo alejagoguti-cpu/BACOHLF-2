@@ -1,3 +1,4 @@
+import { progresoCarga, terminarCarga } from './carga';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -234,7 +235,7 @@ async function cargar() {
       mallaCat(n, c.nombre, g, m, def, { tris: (c.tLen ?? c.vLen / 3) / 3 });
     }
     niveles[info.i] = n; scene.add(n.grupo);
-    hechos++; $('#cargando i b').style.width = (90 * hechos / man.niveles.length) + '%';
+    hechos++; progresoCarga(90 * hechos / man.niveles.length);
   }));
   // redes MEP del Piso 2
   const p2 = niveles.find((n) => n.info.nombre === 'PISO 2');
@@ -642,8 +643,7 @@ function frame() {
     if (s === 'arq') { setCapas(['Arquitectura', 'Estructura']); gsap.to(S, { cerr: 0, bordes: 0.7, duration: 1 }); }
     else { setCapas(['Arquitectura', 'Hidrosanitaria']); gsap.to(S, { cerr: 0.92, bordes: 0.2, dist: 60, el: 70, duration: 1.4, ease: 'power3.inOut' }); }
   });
-  $('#cargando i b').style.width = '100%';
-  setTimeout(() => $('#cargando').classList.add('fin'), 250);
+  terminarCarga();
   frame();
   // apertura: la nube de escaneo se solidifica en el edificio
   Object.assign(S, { ...ESC.hero.st, nube: 1 });

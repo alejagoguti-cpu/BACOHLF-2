@@ -188,7 +188,7 @@ export function iniciarAnimaciones() {
   });
   iniciarTilt();
   // cabecera y dock entran al cargar
-  gsap.from('#top > *', { autoAlpha: 0, y: -24, stagger: 0.1, duration: 0.9, ease: 'power3.out', delay: 0.3, clearProps: 'opacity,visibility,transform' });
+  gsap.from('#top > *:not(.marca)', { autoAlpha: 0, y: -24, stagger: 0.1, duration: 0.9, ease: 'power3.out', delay: 0.3, clearProps: 'opacity,visibility,transform' });
   // el dock ya no entra al cargar: aparece solo en la sección de capas y en exploración libre (main.ts + premium.css)
   gsap.fromTo('#capas .capa', { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5, delay: 1.2, clearProps: 'opacity,visibility,transform' });
 }

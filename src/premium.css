@@ -701,3 +701,51 @@ body.dock-on #dock, body[data-modo="libre"] #dock { opacity: 1; visibility: visi
 .cierre .logo-cierre { width: min(260px, 60vw); height: auto; filter: drop-shadow(0 0 24px rgba(213,190,145,.35)); mix-blend-mode: normal; }
 #cargando img { width: 170px; height: auto; filter: none; }
 @media (max-width: 900px) { .marca img { height: 34px; } }
+
+/* ══ pantalla de carga con el logo (carga.ts) ══ */
+#cargando { display: block; background: none; transition: none; }
+#cargando.fin { opacity: 1; visibility: visible; }
+body.cargando .marca img { opacity: 0; }
+#cargando .c-panel { position: absolute; left: 0; right: 0; height: 50.5%; background: var(--fondo); }
+#cargando .c-panel.arriba { top: 0; } #cargando .c-panel.abajo { bottom: 0; }
+#cargando .c-grid { position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(220,229,236,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(220,229,236,.05) 1px, transparent 1px);
+  background-size: 64px 64px; background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%); mask-image: radial-gradient(ellipse at center, #000 0%, transparent 70%);
+  animation: c-in 1.6s ease both, c-grid 14s linear infinite; }
+#cargando .c-junta { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--oro), transparent); opacity: 0; box-shadow: 0 0 18px rgba(213,190,145,.8); }
+#cargando .c-centro { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(420px, 78vw); padding: 44px 40px 30px; display: grid; justify-items: center; }
+#cargando .c-esq { position: absolute; width: 22px; height: 22px; border: 0 solid var(--oro); animation: c-esq .7s cubic-bezier(.2,.8,.2,1) both .9s; }
+#cargando .c-esq.a { left: 0; top: 0; border-width: 1px 0 0 1px; transform-origin: 0 0; }
+#cargando .c-esq.b { right: 0; top: 0; border-width: 1px 1px 0 0; transform-origin: 100% 0; }
+#cargando .c-esq.c { left: 0; bottom: 0; border-width: 0 0 1px 1px; transform-origin: 0 100%; }
+#cargando .c-esq.d { right: 0; bottom: 0; border-width: 0 1px 1px 0; transform-origin: 100% 100%; }
+#cargando .c-logo { position: relative; width: 100%; will-change: transform; }
+#cargando .c-logo img { display: block; width: 100%; height: auto; filter: none; animation: c-revela 1.4s cubic-bezier(.65,0,.35,1) both .3s; }
+#cargando .c-brillo { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, rgba(213,190,145,0) 36%, #D5BE91 46%, #f6e8c8 50%, #D5BE91 54%, rgba(213,190,145,0) 64%); background-size: 260% 100%;
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  animation: c-brillo 2.6s cubic-bezier(.45,0,.2,1) infinite 1.7s; background-position: 160% 0; }
+#cargando .c-scan { position: absolute; top: -14%; bottom: -14%; left: 0; width: 2px; background: var(--oro);
+  box-shadow: 0 0 14px 2px rgba(213,190,145,.85), 0 0 50px 8px rgba(213,190,145,.25); animation: c-scan 1.4s cubic-bezier(.65,0,.35,1) both .3s; }
+#cargando .c-linea { display: block; width: 100%; height: 1px; margin: 26px 0 16px; background: linear-gradient(90deg, transparent, rgba(213,190,145,.7), transparent); transform-origin: center; animation: c-linea 1s cubic-bezier(.2,.8,.2,1) both 1.2s; }
+#cargando .c-info { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; animation: c-sube .7s ease both 1.4s; }
+#cargando .c-info span { white-space: nowrap; font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--txt2); font-weight: 600; }
+#cargando .c-info .c-pct { font-size: 12px; letter-spacing: .08em; color: var(--oro); }
+#cargando .c-info .c-pct b { font-size: 22px; font-weight: 300; font-variant-numeric: tabular-nums; color: #fff; margin-right: 2px; }
+#cargando .c-barra { display: block; width: 100%; height: 1px; margin-top: 10px; background: rgba(220,229,236,.12); animation: c-sube .7s ease both 1.5s; }
+#cargando .c-barra b { display: block; height: 100%; width: 100%; background: var(--oro); transform: scaleX(0); transform-origin: 0 50%; box-shadow: 0 0 10px rgba(213,190,145,.7); }
+@keyframes c-in { from { opacity: 0; } }
+@keyframes c-grid { to { background-position: calc(50% + 64px) calc(50% + 64px); } }
+@keyframes c-revela { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes c-scan { 0% { left: 0; opacity: 0; } 8% { opacity: 1; } 88% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+@keyframes c-brillo { 0% { background-position: 160% 0; } 55%, 100% { background-position: -60% 0; } }
+@keyframes c-esq { from { transform: scale(0); opacity: 0; } }
+@keyframes c-linea { from { transform: scaleX(0); opacity: 0; } }
+@keyframes c-sube { from { opacity: 0; transform: translateY(10px); } }
+@media (max-width: 900px) { #cargando .c-centro { padding: 34px 26px 24px; } #cargando .c-info span:first-child { font-size: 9.5px; letter-spacing: .16em; } }
+@media (prefers-reduced-motion: reduce) { #cargando * { animation-duration: .01s !important; animation-iteration-count: 1 !important; } }
+/* la regla vieja "#cargando i" (barra de 240×1) no debe aplicar a las piezas nuevas */
+#cargando .c-brillo { width: auto; height: auto; }
+#cargando .c-scan { height: auto; }
+#cargando .c-junta { width: auto; }
