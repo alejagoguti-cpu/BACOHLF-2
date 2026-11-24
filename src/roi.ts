@@ -114,31 +114,38 @@ let escMarcador = { P: st.P };
 const anim = { rev: 1, revA: 1 };
 function dibujarEscala() {
   const svg = $<SVGSVGElement>('#curvaRoi'); if (!svg) return;
-  const W = 640, H = 300, L = 46, R = 16, T = 18, B = 34;
+  const W = 640, H = 300, L = 64, R = 16, T = 12, B = 50;
   const c = calc(); const I = c.I;
-  const ymax = Math.ceil((PMAX * 0.14) / I / 2) * 2 + 1;
+  const ymax = 20; // eje fijo 0x–20x
   const x = (P: number) => L + ((P - PMIN) / (PMAX - PMIN)) * (W - L - R);
-  const y = (v: number) => H - B - (v / ymax) * (H - T - B);
+  const y = (v: number) => H - B - (Math.min(v, ymax) / ymax) * (H - T - B);
   const linea = (s: number) => { const pts: string[] = []; for (let P = PMIN; P <= PMAX; P += 500) pts.push(`${x(P).toFixed(1)},${y((P * s) / 100 / I).toFixed(1)}`); return pts; };
   const lo = linea(6), hi = linea(14), mid = linea(st.s);
   const Pm = Math.round(escMarcador.P / 250) * 250; const vm = (Pm * st.s) / 100 / I;
-  const ticksY = Array.from({ length: Math.floor(ymax / 2) + 1 }, (_, i) => i * 2).filter((v) => v <= ymax);
+  const ticksY = Array.from({ length: ymax / 2 + 1 }, (_, i) => i * 2);
   const ticksX = [5000, 10000, 20000, 30000, 40000];
+  // globo del marcador: arriba a la izquierda del punto (queda sobre la curva, que sube a la derecha); si no cabe, abajo a la derecha
+  const bw = 350, bh = 46; const px = x(Pm), py = y(vm);
+  const izq = px - bw - 14 >= L;
+  const gx = izq ? px - bw - 14 : Math.min(px + 14, W - R - bw);
+  const gy = izq ? Math.max(T, py - bh - 18) : Math.min(H - B - bh - 4, py + 18);
   svg.innerHTML = `
     ${ticksY.map((v) => `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" class="cx">${v}x</text>`).join('')}
-    ${ticksX.map((P) => `<text x="${x(P)}" y="${H - 10}" text-anchor="middle" class="cx">$${(P / 1000).toLocaleString('es-CO')} mil M</text>`).join('')}
+    ${ticksX.map((P) => `<text x="${x(P)}" y="${H - B + 18}" text-anchor="middle" class="cx">$${(P / 1000).toLocaleString('es-CO')} mil M</text>`).join('')}
+    <text x="${L + (W - L - R) / 2}" y="${H - 8}" text-anchor="middle" class="eje-t">Presupuesto de obra</text>
+    <text transform="translate(14 ${T + (H - T - B) / 2}) rotate(-90)" text-anchor="middle" class="eje-t">Multiplicador de retorno</text>
     <clipPath id="clipEsc"><rect x="${L}" y="0" width="${(W - L - R) * anim.rev}" height="${H}"/></clipPath>
     <g clip-path="url(#clipEsc)"><polygon points="${lo.join(' ')} ${hi.reverse().join(' ')}" class="banda"/>
     <line x1="${L}" x2="${W - R}" y1="${y(1)}" y2="${y(1)}" class="equilibrio"/>
     <text x="${W - R}" y="${y(1) - 6}" text-anchor="end" class="cx rojo">1x · punto de equilibrio</text>
     <polyline points="${mid.join(' ')}" class="linea-s"/><polyline points="${mid.join(' ')}" class="linea-flujo"/></g>
-    <g class="marcador" transform="translate(${x(Pm)} 0)">
-      <line y1="${T}" y2="${H - B}" class="m-l"/>
-      <circle cy="${y(vm)}" r="7" class="m-c"/>
-      <g transform="translate(${x(Pm) > W - 170 ? -158 : 12} ${Math.max(T + 4, y(vm) - 46)})">
-        <rect width="146" height="42" rx="3" class="m-box"/>
-        <text x="10" y="17" class="m-t1">${M(Pm)}</text>
-        <text x="10" y="33" class="m-t2">${X(vm)} · neto ${M((Pm * st.s) / 100 - I)}</text>
+    <g class="marcador">
+      <line x1="${px}" x2="${px}" y1="${T}" y2="${H - B}" class="m-l"/>
+      <circle cx="${px}" cy="${py}" r="7" class="m-c"/>
+      <g transform="translate(${gx} ${gy})">
+        <rect width="${bw}" height="${bh}" rx="3" class="m-box"/>
+        <text x="12" y="19" class="m-t1">${M(Pm)} de presupuesto</text>
+        <text x="12" y="36" class="m-t2">Retorno: ${vm.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} veces la inversión · Ahorro neto: ${M((Pm * st.s) / 100 - I)} limpios</text>
       </g>
     </g>
     <rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent" class="zona-arrastre"/>`;
@@ -147,11 +154,12 @@ function dibujarEscala() {
 function tablaEscala() {
   const tb = $('#tablaRoi tbody'); if (!tb) return;
   const c = calc();
-  const fila = (P: number, cls = '', nombre = '') => {
+  const mas = (v: number) => (v >= 0 ? '+' : '') + M(v);
+  const fila = (P: number, nombre: string, cls = '') => {
     const nlo = (P * 6) / 100 - c.I, nhi = (P * 14) / 100 - c.I;
-    return `<tr class="${cls}"><td><b>${nombre || M(P)}</b>${nombre ? `<small>${M(P)}</small>` : ''}</td><td>${PCT((c.I / P) * 100)}</td><td class="oro">${M(nlo)} a ${M(nhi)}</td><td><span class="badge-roi ${cls ? 'oro' : ''}">${X((P * 0.06) / c.I)} a ${X((P * 0.14) / c.I)}</span></td></tr>`;
+    return `<tr class="${cls}"><td><b>${nombre}</b><small>(${M(P)})</small></td><td>${PCT((c.I / P) * 100)}</td><td class="oro">${mas(nlo)} a ${M(nhi)}</td><td><span class="badge-roi ${cls ? 'oro' : ''}">${X((P * 0.06) / c.I)} a ${X((P * 0.14) / c.I)}</span></td></tr>`;
   };
-  tb.innerHTML = fila(st.P, 'destacado', 'Tu proyecto') + [10000, 20000, 30000].map((P) => fila(P)).join('');
+  tb.innerHTML = fila(st.P, 'Tu proyecto actual', 'destacado') + fila(20000, 'Escala Media') + fila(30000, 'Gran Escala');
 }
 
 // ── 09.3 amortización ──
@@ -236,6 +244,7 @@ function render(anim = true) {
   if (!d) dibujarEscala();
   tablaEscala();
   $$('[data-v="inv"]').forEach((e) => (e.textContent = M(c.I)));
+  $$('[data-v="inv-iva"]').forEach((e) => (e.textContent = M(c.I) + (st.iva ? ' con IVA' : '')));
   $$('[data-v="pay"]').forEach((e) => (e.textContent = c.pay === null ? 'más tiempo del que dura la obra' : `el ${fmtPay(c.pay).b.toLowerCase()} ${fmtPay(c.pay).e}`));
   $$('[data-v="dias"]').forEach((e) => (e.textContent = `${c.dias} días`));
   // 09.3
@@ -262,7 +271,7 @@ export function iniciarRoi() {
   let arr = false;
   const mover = (e: PointerEvent) => {
     const r = svgE.getBoundingClientRect(); const fx = ((e.clientX - r.left) / r.width) * 640;
-    const P = Math.round((PMIN + ((fx - 46) / (640 - 46 - 16)) * (PMAX - PMIN)) / 500) * 500;
+    const P = Math.round((PMIN + ((fx - 64) / (640 - 64 - 16)) * (PMAX - PMIN)) / 500) * 500; // mismos márgenes que dibujarEscala
     st.P = Math.min(PMAX, Math.max(PMIN, P)); rP.value = String(st.P); render(true);
   };
   svgE.addEventListener('pointerdown', (e) => { arr = true; tocado2 = true; barrido?.kill(); svgE.setPointerCapture(e.pointerId); mover(e); });

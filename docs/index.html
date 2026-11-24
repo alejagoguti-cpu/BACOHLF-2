@@ -8,8 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <script type="module" crossorigin src="./assets/index-BbeqxVWJ.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-GeqieAAX.css">
+  <script type="module" crossorigin src="./assets/index-CexlwFLU.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-B2LmNgb0.css">
 </head>
 <body data-modo="cine">
 <div id="glow"><i class="g1"></i><i class="g2"></i><i class="g3"></i></div>
@@ -244,28 +244,43 @@
   <section class="esc izq ancho roi-sec" data-escena="roi2">
     <div class="txt">
       <p class="k" data-a="up">09 · Retorno de inversión · Escala</p>
-      <h2 data-a="words">A mayor obra, <b>mayor retorno</b></h2>
-      <p class="lead" data-a="up">La inversión BIM es casi fija; el ahorro crece con el presupuesto. Arrastra el marcador sobre la curva para comparar.</p>
-      <div class="stats" data-a="stagger">
-        <div class="stat"><small>Ahorro total medido</small><b>14.2%</b></div>
-        <div class="stat"><small>Reducción reprocesos</small><b>-20%</b></div>
-        <div class="stat"><small>Reducción de plazo</small><b>-10%</b></div>
+      <h2 data-a="words">A mayor escala de obra, <b>mayor eficiencia de capital</b></h2>
+      <p class="lead" data-a="up">La gestión BIM representa una inversión fija de control e ingeniería técnica. Mientras los honorarios de coordinación se mantienen estables, el capital protegido frente a sobrecostos crece directamente con el volumen del presupuesto. Arrastra el marcador sobre la curva para evaluar diferentes escalas de obra.</p>
+      <div class="fuentes" data-a="stagger">
+        <a class="fuente" href="https://www.construction.com/" target="_blank" rel="noopener">
+          <b>14.2%</b><span>Ahorro total promedio en el proyecto</span>
+          <small>Dodge Data &amp; Analytics · SmartMarket Report <i data-i="externo"></i></small>
+        </a>
+        <a class="fuente" href="https://www.construction-institute.org/" target="_blank" rel="noopener">
+          <b>-20.0%</b><span>Reducción de reprocesos y demoliciones en campo</span>
+          <small>Construction Industry Institute (CII) · RT-153 <i data-i="externo"></i></small>
+        </a>
+        <a class="fuente" href="https://cife.stanford.edu/" target="_blank" rel="noopener">
+          <b>-40.0%</b><span>Mitigación de órdenes de cambio y adicionales imprevistos</span>
+          <small>Stanford University · Center for Integrated Facility Engineering (CIFE) <i data-i="externo"></i></small>
+        </a>
       </div>
-      <p class="nota" data-a="up">La banda muestra el rango de ahorro de la propuesta (6% a 14%); la línea dorada, el escenario elegido en la calculadora.</p>
+      <p class="nota" data-a="up">La banda sombreada representa el rango de sobrecostos típicos en construcción tradicional (6% a 14%), mitigados mediante coordinación digital y presupuesto 5D.</p>
     </div>
     <div class="roi-panel" data-a="fly">
       <div class="roi-header">
         <span class="roi-tag">Economía de escala</span>
-        <h3>Retorno por presupuesto de obra</h3>
-        <p>Inversión BIM de referencia: <b data-v="inv">—</b></p>
+        <h3>Retorno según el presupuesto de obra</h3>
+        <p>Inversión BIM fija de referencia: <b data-v="inv-iva">—</b></p>
       </div>
-      <svg id="curvaRoi" viewBox="0 0 640 300" aria-label="Retorno según presupuesto de obra"></svg>
+      <svg id="curvaRoi" viewBox="0 0 640 300" aria-label="Multiplicador de retorno según el presupuesto de obra"></svg>
+      <ul class="esc-ley">
+        <li><i class="l-eq"></i>1x · Punto de equilibrio (el servicio se paga solo)</li>
+        <li><i class="l-cur"></i>Curva de ganancia neta para el proyecto</li>
+        <li><i class="l-ban"></i>Rango de sobrecostos evitados según estudios de la industria (6% al 14%)</li>
+      </ul>
       <div class="roi-tabla-w">
         <table class="roi-tabla" id="tablaRoi">
-          <thead><tr><th>Presupuesto</th><th>% costo BIM</th><th>Ahorro neto (6%–14%)</th><th>Retorno</th></tr></thead>
+          <thead><tr><th>Presupuesto</th><th>% costo BIM</th><th>Ahorro neto protegido (6% – 14%)</th><th>Multiplicador (ROI)</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
+      <p class="tabla-nota">Ahorro neto = Presupuesto × porcentaje de sobrecosto evitado menos la inversión fija de <b data-v="inv-iva">—</b>.</p>
     </div>
   </section>
 

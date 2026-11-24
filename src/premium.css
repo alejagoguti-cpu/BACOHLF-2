@@ -502,8 +502,8 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
   .roi-tabla td::before { display: block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--txt2); font-weight: 700; margin-bottom: 3px; }
   .roi-tabla td:nth-child(1)::before { content: 'Presupuesto'; }
   .roi-tabla td:nth-child(2)::before { content: '% costo BIM'; }
-  .roi-tabla td:nth-child(3)::before { content: 'Ahorro neto'; }
-  .roi-tabla td:nth-child(4)::before { content: 'Retorno (ROI)'; }
+  .roi-tabla td:nth-child(3)::before { content: 'Ahorro neto protegido (6% – 14%)'; }
+  .roi-tabla td:nth-child(4)::before { content: 'Multiplicador (ROI)'; }
   .roi-tabla td:nth-child(1) b { font-size: 17px; }
 }
 @media (max-width: 900px) {
@@ -752,3 +752,35 @@ body.cargando .marca img { opacity: 0; }
 /* diagrama 01 sin BIM: título y contador en rojo */
 .diag .dt.roto { fill: #ff8a77; }
 .diag figcaption .cnt.roto { color: #ff8a77 !important; }
+
+/* 09.2 escala: tarjetas con fuente, ejes, leyenda y nota de la tabla */
+.fuentes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 26px; max-width: 640px; }
+.fuente { display: flex; flex-direction: column; gap: 6px; padding: 16px 16px 14px; text-decoration: none; color: inherit; background: var(--fondo); border: 1px solid var(--hilo); border-top: 2px solid var(--oro); transition: border-color .3s, background .3s; }
+.fuente:hover { background: var(--panel2, #00234C); border-color: rgba(213,190,145,.6); }
+.fuente b { font-size: clamp(26px, 2.4vw, 34px); font-weight: 300; letter-spacing: -.03em; color: #fff; font-variant-numeric: tabular-nums; }
+.fuente span { font-size: 13px; line-height: 1.4; color: rgba(220,229,236,.85); flex: 1; }
+.fuente small { font-size: 10.5px; line-height: 1.45; color: var(--oro); letter-spacing: .02em; }
+.fuente small .ico { width: 11px; height: 11px; vertical-align: -1px; margin-left: 2px; }
+#curvaRoi .eje-t { font-size: 10px; letter-spacing: .16em; text-transform: uppercase; fill: rgba(220,229,236,.6); font-weight: 700; }
+#curvaRoi .m-t1 { font-size: 13px; font-weight: 700; }
+#curvaRoi .m-t2 { font-size: 10.5px; }
+.esc-ley { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 11.5px; color: var(--txt2); margin-top: -6px; }
+.esc-ley li { display: flex; align-items: center; gap: 8px; }
+.esc-ley i { width: 18px; height: 0; flex: none; }
+.esc-ley .l-eq { border-top: 1.5px dashed #ff8a77; }
+.esc-ley .l-cur { border-top: 2.5px solid var(--oro); }
+.esc-ley .l-ban { height: 10px; background: rgba(213,190,145,.12); border: 1px solid rgba(213,190,145,.25); }
+.roi-tabla td small { display: block; color: var(--txt2); font-size: 11px; margin-top: 2px; }
+.tabla-nota { font-size: 11.5px; line-height: 1.5; color: var(--txt2); margin-top: -6px; }
+.tabla-nota b { color: var(--oro); font-weight: 600; }
+@media (max-width: 900px) {
+  .fuentes { grid-template-columns: 1fr; }
+  .fuente { display: grid; grid-template-columns: auto 1fr; column-gap: 14px; align-items: baseline; }
+  .fuente b { grid-row: span 2; font-size: 28px; }
+  .esc-ley { font-size: 11px; }
+}
+@media (min-width: 901px) {
+  .roi-tabla td:first-child { white-space: nowrap; }
+  .roi-tabla td, .roi-tabla th { padding-top: 9px; padding-bottom: 9px; }
+  .roi-sec .roi-panel { gap: 12px; }
+}
