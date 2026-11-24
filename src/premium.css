@@ -456,3 +456,78 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
   .roi-panel { width: 100%; max-width: 100%; margin-left: 0; min-width: 0; padding: 18px 14px; }
   .roi-etapas-box { grid-template-columns: 1fr; }
 }
+
+/* ══ celular: ajustes finos ══ */
+@media (max-width: 900px) {
+  /* inicio: datos compactos en una fila */
+  .hero .stats { flex-wrap: nowrap; padding-top: 14px; }
+  .hero .stat { flex: 1 1 0; padding-right: 10px; margin-right: 10px; }
+  .hero .stat small { font-size: 9px; letter-spacing: .1em; margin-bottom: 6px; }
+  .hero .stat b { font-size: 17px; white-space: nowrap; }
+  .ctas-hero { flex-direction: column; align-items: stretch; }
+  .ctas-hero .btn { text-align: center; }
+  /* flujos: siempre en vertical, con su línea */
+  .flujo { grid-template-columns: 1fr; row-gap: 0; margin-top: 28px; }
+  .flujo::before, .flujo::after { display: block; left: 6px; right: auto; top: 8px; bottom: 26px; width: 1px; height: auto; transform: scaleY(var(--p, 0)); transform-origin: top; }
+  .flujo li { padding: 0 0 22px 34px; }
+  .flujo em { margin-top: 4px; }
+  /* planos: pestañas en una fila deslizable */
+  .tabs-planos { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; max-width: 100%; scrollbar-width: none; }
+  .tabs-planos button { flex: none; padding: 10px 12px; font-size: 11px; }
+  /* honorarios: gráfico plano, sin inclinación */
+  .grafico { min-width: 0; }
+  /* gemelo: árbol más compacto */
+  .arbol .raiz { padding: 14px 18px; }
+  .arbol li { font-size: 13.5px; padding: 5px 0; }
+  /* textos de apoyo */
+  .nota { font-size: 12px; }
+  .k { font-size: 10px; letter-spacing: .2em; }
+  .k::before { width: 24px; }
+}
+@media (max-width: 380px) { .hero .stat b { font-size: 15px; } h1 { font-size: 40px !important; } }
+@media (max-width: 900px) {
+  /* datos en fila compactos (inicio y ROI) */
+  .stats { flex-wrap: nowrap; gap: 0; border-top: 1px solid var(--hilo); padding-top: 14px; }
+  .stats .stat { flex: 1 1 0; padding: 0 10px 0 0; margin-right: 10px; border-right: 1px solid var(--hilo); min-width: 0; }
+  .stats .stat:last-child { border-right: 0; margin-right: 0; }
+  .stats .stat small { font-size: 9px; letter-spacing: .1em; margin-bottom: 6px; }
+  .stats .stat b { font-size: 22px; white-space: nowrap; }
+  /* tabla ROI: cada presupuesto es una tarjeta */
+  .roi-tabla-w { overflow: visible; border: 0; background: none; }
+  .roi-tabla thead { display: none; }
+  .roi-tabla, .roi-tabla tbody { display: block; }
+  .roi-tabla tr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; padding: 14px; margin-bottom: 8px; border: 1px solid var(--hilo); border-radius: var(--r); background: var(--panel); }
+  .roi-tabla tr.destacado { border-color: var(--oro); }
+  .roi-tabla td { display: block; padding: 0; border: 0; font-size: 13px; }
+  .roi-tabla td::before { display: block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--txt2); font-weight: 700; margin-bottom: 3px; }
+  .roi-tabla td:nth-child(1)::before { content: 'Presupuesto'; }
+  .roi-tabla td:nth-child(2)::before { content: '% costo BIM'; }
+  .roi-tabla td:nth-child(3)::before { content: 'Ahorro neto'; }
+  .roi-tabla td:nth-child(4)::before { content: 'Retorno (ROI)'; }
+  .roi-tabla td:nth-child(1) b { font-size: 17px; }
+}
+@media (max-width: 900px) {
+  .hero .stats .stat b { font-size: 16px; }
+  .esc.ancho { flex-wrap: wrap; }
+  .esc.ancho > .txt { max-width: 100%; width: 100%; }
+  .roi-panel { flex: 1 1 100%; }
+}
+@media (min-width: 600px) and (max-width: 900px) {
+  .roi-tabla tr { grid-template-columns: repeat(4, 1fr); }
+  .roi-etapas-box { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 600px) and (max-width: 900px) {
+  .hero { justify-content: center; }
+  .ctas-hero { flex-direction: row; }
+  .hero .stats .stat b { font-size: 24px; }
+  .hero h1 { font-size: clamp(56px, 9vw, 80px) !important; }
+  .g-meses, .g-fila { grid-template-columns: 150px repeat(7, 1fr); }
+  .g-fila::after { left: 150px; }
+  .g-et b { font-size: 13px; }
+}
+/* ROI en laptop: título contenido y datos en una fila */
+[data-escena="roi"] h2 { font-size: clamp(34px, min(3.8vw, 6.4vh), 58px); }
+[data-escena="roi"] .stats { flex-wrap: nowrap; margin-top: clamp(18px, 3vh, 34px); }
+[data-escena="roi"] .stat { padding-right: 24px; margin-right: 24px; }
+[data-escena="roi"] .stat b { font-size: clamp(26px, 3.6vh, 34px); }
+[data-escena="roi"] .lead { margin-top: clamp(12px, 2vh, 26px); }

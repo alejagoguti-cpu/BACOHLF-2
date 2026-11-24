@@ -66,7 +66,7 @@ function animarSeccion(sec: HTMLElement) {
   $$('[data-a="flip"]', sec).forEach((el, i) => tl.fromTo(el, { autoAlpha: 0, rotateY: -95, x: -80, z: -300, transformPerspective: 1400, transformOrigin: 'left center' },
     { autoAlpha: 1, rotateY: 0, x: 0, z: 0, duration: 1.2, ease: 'power4.out' }, 0.4 + i * 0.22));
   $$('[data-a="tilt"]', sec).forEach((el) => tl.fromTo(el, { autoAlpha: 0, rotateX: 45, rotateY: -25, y: 160, z: -300, transformPerspective: 1600 },
-    { autoAlpha: 1, rotateX: 6, rotateY: -7, y: 0, z: 0, duration: 1.6, ease: 'power3.out' }, 0.3));
+    { autoAlpha: 1, rotateX: innerWidth < 900 ? 0 : 6, rotateY: innerWidth < 900 ? 0 : -7, y: 0, z: 0, duration: 1.6, ease: 'power3.out' }, 0.3));
   $$('[data-a="msg"]', sec).forEach((el, i) => tl.fromTo(el, { autoAlpha: 0, x: el.classList.contains('der') ? 70 : -70, scale: 0.85, filter: 'blur(8px)' },
     { autoAlpha: 1, x: 0, scale: 1, filter: 'blur(0px)', duration: 0.7, ease: 'back.out(1.6)' }, 1.4 + i * 0.75));
   // listas: cada hijo entra por separado
