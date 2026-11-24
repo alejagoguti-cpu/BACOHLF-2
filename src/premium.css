@@ -661,3 +661,9 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
 .chips-esc button.on, .seg button.on { animation: chip-on .5s cubic-bezier(.2,.9,.3,1.4); }
 @keyframes chip-on { from { transform: scale(.88); } }
 @media (prefers-reduced-motion: reduce) { #curvaRoi .linea-flujo, #amort .l-flujo, #cascada .guia, #cascada .b-n, .marcador .m-c, .demo-tag i { animation: none; } }
+
+/* dock de capas: NO siempre activo — solo en la sección de capas y en exploración libre */
+#dock { opacity: 0; visibility: hidden; pointer-events: none; transform: translateX(-50%) translateY(28px) scale(.96);
+  transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1), visibility 0s linear .6s; }
+body.dock-on #dock, body[data-modo="libre"] #dock { opacity: 1; visibility: visible; pointer-events: auto; transform: translateX(-50%);
+  transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1), visibility 0s; }

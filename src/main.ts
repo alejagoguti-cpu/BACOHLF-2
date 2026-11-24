@@ -500,6 +500,8 @@ function construirCapas() {
     onEnter: () => { pasoCapa = -1; activar(0); },
     onEnterBack: () => { const i = pasoCapa; pasoCapa = -1; activar(Math.max(0, i)); },
   });
+  // dock de capas: visible solo mientras se recorre esta sección (y en modo libre, vía CSS)
+  ScrollTrigger.create({ trigger: '.capas-sec', start: 'top 60%', end: 'bottom 40%', onToggle: (self) => document.body.classList.toggle('dock-on', self.isActive) });
   $('#pasosCapas').addEventListener('click', (ev) => {
     const li = (ev.target as HTMLElement).closest<HTMLElement>('li'); if (!li) return;
     const i = +li.dataset.i!; window.scrollTo({ top: stc.start + (stc.end - stc.start) * ((i + 0.5) / CAPAS.length), behavior: 'smooth' });
