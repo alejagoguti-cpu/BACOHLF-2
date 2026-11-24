@@ -314,3 +314,145 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
   .hub .n0::after { display: none; }
 }
 @media (max-width: 900px) { .hub { height: auto; } }
+
+/* ── 09 ROI Y RETORNO FINANCIERO ── */
+.roi-panel {
+  flex: 1;
+  min-width: 340px;
+  max-width: 620px;
+  padding: 26px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.roi-header h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 6px 0 4px;
+  color: #fff;
+  letter-spacing: -.02em;
+}
+.roi-header p {
+  font-size: 13px;
+  color: rgba(220, 229, 236, .7);
+}
+.roi-header p b {
+  color: var(--oro);
+}
+.roi-tag {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--oro);
+  border: 1px solid rgba(213,190,145,.35);
+  padding: 3px 8px;
+  border-radius: var(--r);
+  background: rgba(213,190,145,.08);
+}
+.roi-tabla-w {
+  overflow-x: auto;
+  border: 1px solid var(--hilo);
+  border-radius: var(--r);
+  background: rgba(0, 27, 59, .6);
+}
+.roi-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+.roi-tabla th {
+  padding: 10px 14px;
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(220, 229, 236, .6);
+  border-bottom: 1px solid var(--hilo);
+  background: rgba(220, 229, 236, .03);
+}
+.roi-tabla td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--hilo);
+  color: rgba(220, 229, 236, .9);
+}
+.roi-tabla tr:last-child td {
+  border-bottom: none;
+}
+.roi-tabla td.oro {
+  color: var(--oro);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.roi-tabla tr.destacado {
+  background: rgba(213, 190, 145, .08);
+}
+.badge-roi {
+  display: inline-block;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: var(--r);
+  background: rgba(220, 229, 236, .08);
+  color: #fff;
+  border: 1px solid var(--hilo);
+}
+.badge-roi.oro {
+  background: var(--oro);
+  color: var(--fondo);
+  border-color: var(--oro);
+}
+.roi-etapas-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.roi-etapa {
+  padding: 12px 14px;
+  border: 1px solid var(--hilo);
+  border-radius: var(--r);
+  background: rgba(0, 27, 59, .4);
+}
+.roi-etapa small {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--oro);
+  margin-bottom: 4px;
+}
+.roi-etapa b {
+  display: block;
+  font-size: 12.5px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.roi-etapa p {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(220, 229, 236, .65);
+  margin: 0;
+}
+.roi-pitch {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--oro);
+  background: rgba(213, 190, 145, .06);
+  border-radius: 0 var(--r) var(--r) 0;
+}
+.roi-pitch p {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: rgba(220, 229, 236, .85);
+  margin: 0;
+}
+.roi-pitch p strong {
+  color: var(--oro);
+}
+@media (max-width: 900px) {
+  .roi-panel { width: 100%; max-width: 100%; margin-left: 0; min-width: 0; padding: 18px 14px; }
+  .roi-etapas-box { grid-template-columns: 1fr; }
+}

@@ -437,6 +437,7 @@ function definirEscenas() {
     interior: { st: { bim: 1, bordes: 0.25, ctx: 0.1, az: 140, el: 20, dist: 220, ty: 10, shift: 0 }, capas: ARQ, velo: 'centro' },
     planos: { st: { verHasta: ip2, corteY: e2 + 1.4, bim: 1, bordes: 0.7, cerr: 0, ctx: 0, el: 82, dist: 120, az: 0, tx: c2.x, tz: c2.z, ty: e2, shift: 0 }, capas: ARQ, velo: 'centro' },
     actores: { st: { explode: 1, bim: 1, bordes: 0.45, ctx: 0, az: 95, el: 24, dist: 190, ty: 30, shift: 0 }, capas: ['Arquitectura', 'Estructura', 'Hidrosanitaria', 'Eléctrica'], velo: 'centro' },
+    roi: { st: { bim: 1, bordes: 0.35, ctx: 0.12, az: 160, el: 20, dist: 205, ty: 12, shift: 0 }, capas: ARQ, velo: 'centro' },
     honorarios: { st: { bim: 1, bordes: 0.3, ctx: 0.15, az: 200, el: 18, dist: 210, ty: 10, shift: 0 }, capas: ARQ, velo: 'centro' },
     gemelo: { st: { cerr: 0.8, bim: 0, bordes: 0.15, ctx: 0.25, az: 55, el: 30, dist: 78, tx: c2.x, tz: c2.z, ty: 8, shift: 0.18 }, capas: CAPAS.map((c) => c.d) },
     cierre: { st: { az: 25, el: 12, dist: 140, ctx: 1, ty: 10, tx: 0, tz: 0, shift: 0 }, capas: ARQ, velo: 'centro' },
