@@ -501,9 +501,9 @@ h1 b, h2 b { font-weight: 600; color: var(--oro); }
   .roi-tabla td { display: block; padding: 0; border: 0; font-size: 13px; }
   .roi-tabla td::before { display: block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--txt2); font-weight: 700; margin-bottom: 3px; }
   .roi-tabla td:nth-child(1)::before { content: 'Presupuesto'; }
-  .roi-tabla td:nth-child(2)::before { content: '% costo BIM'; }
-  .roi-tabla td:nth-child(3)::before { content: 'Ahorro neto protegido (6% – 14%)'; }
-  .roi-tabla td:nth-child(4)::before { content: 'Multiplicador (ROI)'; }
+  .roi-tabla td:nth-child(2)::before { content: 'Costo BIM'; }
+  .roi-tabla td:nth-child(3)::before { content: 'Ahorro neto'; }
+  .roi-tabla td:nth-child(4)::before { content: 'ROI'; }
   .roi-tabla td:nth-child(1) b { font-size: 17px; }
 }
 @media (max-width: 900px) {
@@ -822,3 +822,9 @@ body.cargando .marca img { opacity: 0; }
 }
 .gasto small em { display: block; margin: 6px 0 0; font-size: 16px; letter-spacing: 0; font-weight: 600; }
 @media (max-width: 900px) { .gasto small em { display: inline; margin-left: 6px; font-size: 13px; } }
+
+/* 09.2 simplificada: tarjetas compactas, fuente = enlace */
+.fuente { gap: 8px; }
+.fuente span { flex: 1; }
+.fuente small u { letter-spacing: .06em; text-transform: none; font-size: 11.5px; }
+.esc-ley { gap: 6px 22px; }

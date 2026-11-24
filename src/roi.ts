@@ -127,7 +127,7 @@ function dibujarEscala() {
   const ticksY = Array.from({ length: ymax / 2 + 1 }, (_, i) => i * 2);
   const ticksX = [5000, 10000, 20000, 30000, 40000];
   // globo del marcador: arriba a la izquierda del punto (queda sobre la curva, que sube a la derecha); si no cabe, abajo a la derecha
-  const bw = 350, bh = 46; const px = x(Pm), py = y(vm);
+  const bw = 170, bh = 46; const px = x(Pm), py = y(vm);
   const izq = px - bw - 14 >= L;
   const gx = izq ? px - bw - 14 : Math.min(px + 14, W - R - bw);
   const gy = izq ? Math.max(T, py - bh - 18) : Math.min(H - B - bh - 4, py + 18);
@@ -139,15 +139,15 @@ function dibujarEscala() {
     <clipPath id="clipEsc"><rect x="${L}" y="0" width="${(W - L - R) * anim.rev}" height="${H}"/></clipPath>
     <g clip-path="url(#clipEsc)"><polygon points="${lo.join(' ')} ${hi.reverse().join(' ')}" class="banda"/>
     <line x1="${L}" x2="${W - R}" y1="${y(1)}" y2="${y(1)}" class="equilibrio"/>
-    <text x="${W - R}" y="${y(1) - 6}" text-anchor="end" class="cx rojo">1x · punto de equilibrio</text>
+    
     <polyline points="${mid.join(' ')}" class="linea-s"/><polyline points="${mid.join(' ')}" class="linea-flujo"/></g>
     <g class="marcador">
       <line x1="${px}" x2="${px}" y1="${T}" y2="${H - B}" class="m-l"/>
       <circle cx="${px}" cy="${py}" r="7" class="m-c"/>
       <g transform="translate(${gx} ${gy})">
         <rect width="${bw}" height="${bh}" rx="3" class="m-box"/>
-        <text x="12" y="19" class="m-t1">${M(Pm)} de presupuesto</text>
-        <text x="12" y="36" class="m-t2">Retorno: ${vm.toLocaleString('es-CO', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} veces la inversión · Ahorro neto: ${M((Pm * st.s) / 100 - I)} limpios</text>
+        <text x="12" y="19" class="m-t1">${M(Pm)}</text>
+        <text x="12" y="36" class="m-t2">${X(vm)} · neto ${M((Pm * st.s) / 100 - I)}</text>
       </g>
     </g>
     <rect x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent" class="zona-arrastre"/>`;
@@ -159,9 +159,9 @@ function tablaEscala() {
   const mas = (v: number) => (v >= 0 ? '+' : '') + M(v);
   const fila = (P: number, nombre: string, cls = '') => {
     const nlo = (P * 6) / 100 - c.I, nhi = (P * 14) / 100 - c.I;
-    return `<tr class="${cls}"><td><b>${nombre}</b><small>(${M(P)})</small></td><td>${PCT((c.I / P) * 100)}</td><td class="oro">${mas(nlo)} a ${M(nhi)}</td><td><span class="badge-roi ${cls ? 'oro' : ''}">${X((P * 0.06) / c.I)} a ${X((P * 0.14) / c.I)}</span></td></tr>`;
+    return `<tr class="${cls}"><td><b>${nombre}</b><small>${M(P)}</small></td><td>${PCT((c.I / P) * 100)}</td><td class="oro">${mas(nlo)} a ${M(nhi)}</td><td><span class="badge-roi ${cls ? 'oro' : ''}">${X((P * 0.06) / c.I)} a ${X((P * 0.14) / c.I)}</span></td></tr>`;
   };
-  tb.innerHTML = fila(st.P, 'Tu proyecto actual', 'destacado') + fila(20000, 'Escala Media') + fila(30000, 'Gran Escala');
+  tb.innerHTML = fila(st.P, 'Tu proyecto', 'destacado') + fila(20000, 'Escala media') + fila(30000, 'Gran escala');
 }
 
 // ── 09.3 amortización ──
