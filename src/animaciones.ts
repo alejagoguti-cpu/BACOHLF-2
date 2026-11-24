@@ -1,6 +1,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ico } from './iconos';
+import { Red, type DefNodo } from './red';
 gsap.registerPlugin(ScrollTrigger);
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector(s) as T;
@@ -77,6 +78,12 @@ function animarSeccion(sec: HTMLElement) {
   });
   $$('[data-a="pop"]', sec).forEach((el, i) => tl.fromTo(el, { autoAlpha: 0, scale: 0.6, y: 20, filter: 'blur(10px)' },
     { autoAlpha: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'back.out(1.8)' }, 0.55 + i * 0.12));
+  // red viva: nace del centro y se abre
+  $$('[data-a="red"]', sec).forEach((w) => {
+    gsap.set(w, { autoAlpha: 1 });
+    tl.fromTo($$('.red-ui > *, .red-ayuda', w), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.12 }, 0.3);
+    tl.call(() => (w as HTMLElement & { __red?: Red }).__red?.reiniciar(), [], 0.35);
+  });
   // ── diagramas corporativos ──
   // flujo: la línea se traza y cada nodo se enciende al pasar
   $$<HTMLElement>('[data-a="flujo"]', sec).forEach((f) => {
@@ -333,26 +340,50 @@ export function iniciarObra() {
   ScrollTrigger.create({ trigger: '[data-escena="obra"]', start: 'top 65%', onEnter: play, onEnterBack: play });
 }
 
-// ───────────────────────── actores ─────────────────────────
+// ───────────────────────── redes vivas (reto y actores) ─────────────────────────
+const ESPECIALIDADES: DefNodo[] = [
+  { id: 'arq', corto: 'Arquitectura', label: 'Arquitectura', color: '#D5BE91' }, { id: 'est', corto: 'Estructura', label: 'Estructura', color: '#9fb6cc' },
+  { id: 'hid', corto: 'Hidro', label: 'Hidrosanitaria', color: '#3d8bff' }, { id: 'rci', corto: 'RCI', label: 'Red contra incendios', color: '#ff7a2f' },
+  { id: 'ele', corto: 'Eléctrica', label: 'Eléctrica', color: '#2fd0b5' }, { id: 'mec', corto: 'Mecánica', label: 'Mecánica', color: '#c3cbd4' },
+  { id: 'bim', corto: 'BIM', label: 'Modelo BIM federado', color: '#00234C', hub: true, on: false },
+];
+const ACTORES: DefNodo[] = [
+  { id: 'esc', corto: 'Escaneo', label: 'Proveedor de escaneo', color: '#9fb6cc', info: 'Levantamiento 3D y entrega del modelo de condiciones existentes LOD 300 y soportes acordados.' },
+  { id: 'dis', corto: 'Diseñadores', label: 'Diseñadores / especialistas', color: '#3d8bff', info: 'Desarrollar, revisar y aprobar técnicamente sus modelos por especialidad, en LOD 400 según matriz pactada.' },
+  { id: 'con', corto: 'Contratistas', label: 'Contratistas / fabricantes', color: '#ff7a2f', info: 'Mantener modelos de fabricación/instalación, documentar cambios y suministrar as-built y datos de equipos.' },
+  { id: 'pro', corto: 'Propietario', label: 'Propietario / gerencia', color: '#2fd0b5', info: 'Contratar a responsables, tomar decisiones de aprobación, exigir cumplimiento y recibir los entregables.' },
+  { id: 'baco', corto: 'BACO', label: 'BACO STUDIO', color: '#00234C', hub: true, info: 'Establecer requisitos, administrar BEP/CDE, coordinar, verificar entregas e integrar el cierre digital.' },
+];
+
+function montarRed(wrap: HTMLElement, defs: DefNodo[], textos: (act: number, est: boolean) => string) {
+  const red = new Red($('svg.red', wrap) as unknown as SVGSVGElement, defs);
+  (wrap as HTMLElement & { __red?: Red }).__red = red;
+  const nEl = $('[data-red-n]', wrap); const arq = $('[data-red-arq]', wrap); const vis = { n: +nEl.textContent! };
+  red.onCambio = (n, est, act) => {
+    gsap.to(vis, { n, duration: 0.8, ease: 'power2.out', overwrite: true, onUpdate: () => { nEl.textContent = String(Math.round(vis.n)); } });
+    gsap.to(nEl, { color: est ? '#D5BE91' : '#ff8a77', duration: 0.6 });
+    const txt = textos(act, est);
+    gsap.to(arq, { autoAlpha: 0, y: -8, duration: 0.2, overwrite: true, onComplete: () => { arq.textContent = txt; gsap.fromTo(arq, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.35 }); } });
+    wrap.classList.toggle('es-malla', !est);
+    $$('.red-modo button', wrap).forEach((b) => b.classList.toggle('on', (b.dataset.m === 'estrella') === est));
+  };
+  red.sincronizar(false);
+  $$('.red-modo button', wrap).forEach((b) => b.addEventListener('click', () => red.setHub(b.dataset.m === 'estrella')));
+  return red;
+}
+
 export function iniciarActores() {
+  const reto = $('[data-red="reto"]'); if (reto) montarRed(reto, ESPECIALIDADES, (n, e) => e ? `Estrella · ${n} especialidades conectadas al modelo BIM` : `Malla · ${n} especialidades todas contra todas`);
+  const act = $('[data-red="actores"]'); if (!act) return;
+  const red = montarRed(act, ACTORES, (n, e) => e ? `Estrella · ${n} actores conectados a BACO` : `Malla · ${n} actores todos contra todos`);
   const resp = $('#resp');
-  const lineas = $$('.hub-l path');
-  const actores = $$('.actor');
-  const elegir = (a: HTMLElement) => {
-    actores.forEach((x) => x.classList.toggle('on', x === a));
-    // la conexión de ese actor con BACO se enciende y un pulso viaja por ella
-    const k = ['n1', 'n2', 'n3', 'n4'].findIndex((c) => a.classList.contains(c));
-    lineas.forEach((p, i) => p.classList.toggle('on', i === k || k < 0));
-    if (k >= 0) gsap.fromTo(lineas[k], { strokeDashoffset: (lineas[k] as unknown as SVGPathElement).getTotalLength() }, { strokeDashoffset: 0, duration: 0.6, ease: 'power2.out' });
-    gsap.fromTo(a, { scale: 0.94 }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
-    gsap.to(resp, { autoAlpha: 0, y: 10, duration: 0.2, onComplete: () => {
-      $('small', resp).textContent = a.textContent!.trim(); $('p', resp).textContent = a.dataset.r!;
-      gsap.fromTo($('p', resp), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.7, ease: 'power2.out' });
-      gsap.to(resp, { autoAlpha: 1, y: 0, duration: 0.4 });
+  red.onSel = (n, accion) => {
+    if (!n.info) return;
+    const fuera = accion === 'toggle' && !red.nodos.find((x) => x.id === n.id)!.on;
+    gsap.to(resp, { autoAlpha: 0, y: 10, duration: 0.18, overwrite: true, onComplete: () => {
+      $('small', resp).textContent = fuera ? `${n.label} · fuera de la red` : n.label; $('p', resp).textContent = n.info!;
+      gsap.fromTo($('p', resp), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power2.out' });
+      gsap.to(resp, { autoAlpha: 1, y: 0, duration: 0.35 });
     } });
   };
-  actores.forEach((a) => {
-    a.addEventListener('click', () => elegir(a));
-    a.addEventListener('pointerenter', () => { if (matchMedia('(hover: hover)').matches) elegir(a); });
-  });
 }

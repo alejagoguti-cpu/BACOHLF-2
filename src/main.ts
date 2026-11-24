@@ -548,7 +548,7 @@ let pendiente: number | undefined;
 addEventListener('pointermove', function mover(ev: PointerEvent) {
   const ahora = performance.now(); if (ahora - ultimoRay < 120) { tip.style.transform = `translate(${ev.clientX + 16}px, ${ev.clientY + 16}px)`; clearTimeout(pendiente); pendiente = window.setTimeout(() => mover(ev), 130); return; }
   ultimoRay = ahora;
-  const encima = (ev.target as Element).closest?.('.txt, .glass, button, a, .chip, .carrusel, .actores, .nube-chips, #dock, #top, .etapas, #lightbox, .flotantes .fcard, .hub, .diag, .gantt, .flujo, .arbol, .alerta, .total, .grafico, .resp, .linea, .frente');
+  const encima = (ev.target as Element).closest?.('.txt, .glass, button, a, .chip, .carrusel, .actores, .nube-chips, #dock, #top, .etapas, #lightbox, .flotantes .fcard, .red-wrap, .hub, .diag, .gantt, .flujo, .arbol, .alerta, .total, .grafico, .resp, .linea, .frente');
   if (matchMedia('(hover: none)').matches || (modo === 'cine' && encima) || !niveles.length) { HOV.meta = 0; tip.classList.remove('on'); return; }
   ptr.set(ev.clientX / innerWidth * 2 - 1, -(ev.clientY / innerHeight) * 2 + 1);
   ray.setFromCamera(ptr, camera);
