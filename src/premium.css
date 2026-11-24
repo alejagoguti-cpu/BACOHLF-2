@@ -828,3 +828,9 @@ body.cargando .marca img { opacity: 0; }
 .fuente span { flex: 1; }
 .fuente small u { letter-spacing: .06em; text-transform: none; font-size: 11.5px; }
 .esc-ley { gap: 6px 22px; }
+/* 09.3: tarjetas de etapas más legibles */
+.roi-etapas-box { margin-top: 26px; }
+.roi-etapa { padding: 20px 20px 22px; }
+.roi-etapa small { font-size: 11px; }
+.roi-etapa b { font-size: 18px; margin: 6px 0 8px; display: block; }
+.roi-etapa p { font-size: 14px; line-height: 1.55; }
