@@ -749,3 +749,6 @@ body.cargando .marca img { opacity: 0; }
 #cargando .c-brillo { width: auto; height: auto; }
 #cargando .c-scan { height: auto; }
 #cargando .c-junta { width: auto; }
+/* diagrama 01 sin BIM: título y contador en rojo */
+.diag .dt.roto { fill: #ff8a77; }
+.diag figcaption .cnt.roto { color: #ff8a77 !important; }
