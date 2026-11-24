@@ -834,3 +834,5 @@ body.cargando .marca img { opacity: 0; }
 .roi-etapa small { font-size: 11px; }
 .roi-etapa b { font-size: 18px; margin: 6px 0 8px; display: block; }
 .roi-etapa p { font-size: 14px; line-height: 1.55; }
+/* 09.3 sin panel: las tarjetas ocupan el ancho del texto */
+[data-escena="roi3"] .txt { max-width: 820px; }

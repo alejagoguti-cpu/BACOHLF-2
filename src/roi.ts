@@ -327,6 +327,7 @@ function entrar2() {
 
 // ── 09.3: la obra se simula en bucle mientras se ve ──
 function entrar3() {
+  if (!$('#amort')) return; // 09.3 ya no tiene gráfica
   vis3 = true; anim.revA = 0; cursorT = 0; dibujarAmort();
   clearTimeout(bucle3); bucle3 = window.setTimeout(simular, 700);
 }
